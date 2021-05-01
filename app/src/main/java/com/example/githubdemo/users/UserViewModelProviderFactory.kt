@@ -2,6 +2,7 @@ package com.example.githubdemo.users
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.githubdemo.repository.UserRepository
 import java.lang.IllegalArgumentException
 
 class UserViewModelProviderFactory(private val userRepository: UserRepository) : ViewModelProvider.Factory {
