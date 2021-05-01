@@ -1,4 +1,7 @@
 package com.example.githubdemo.repository
 
-class UserRepository {
+import com.example.githubdemo.users.model.UserResponse
+
+interface UserRepository {
+    suspend fun getUsers() : List<UserResponse>
 }
