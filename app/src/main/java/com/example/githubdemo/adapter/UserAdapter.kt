@@ -1,24 +1,22 @@
 package com.example.githubdemo.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.githubdemo.R
+import com.example.githubdemo.databinding.ItemUserBinding
 import com.example.githubdemo.users.model.UserResponse
 
 class UserAdapter : ListAdapter<UserResponse, UserAdapter.ViewHolder>(UserDiffCallBack()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
-        return ViewHolder(view)
+        val binding: ItemUserBinding =
+            ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -26,22 +24,18 @@ class UserAdapter : ListAdapter<UserResponse, UserAdapter.ViewHolder>(UserDiffCa
         holder.bind(item)
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val userName: TextView = itemView.findViewById(R.id.tv_user_name)
-        private val userAvatar: ImageView = itemView.findViewById(R.id.iv_user_avatar)
-
+    class ViewHolder(private val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: UserResponse) {
-            userName.text = user.name
-            Glide.with(itemView.context)
-                .load(user.imageUrl)
-                .placeholder(R.drawable.loading_animation)
-                .into(userAvatar)
+            binding.apply {
+                tvUserName.text = user.name
+                Glide.with(itemView.context)
+                    .load(user.imageUrl)
+                    .placeholder(R.drawable.loading_animation)
+                    .into(ivUserAvatar)
+            }
         }
     }
 }
-
-
 class UserDiffCallBack : DiffUtil.ItemCallback<UserResponse>() {
     override fun areItemsTheSame(oldItem: UserResponse, newItem: UserResponse): Boolean {
         return oldItem.id == newItem.id
