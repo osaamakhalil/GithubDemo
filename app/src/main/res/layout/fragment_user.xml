@@ -35,5 +35,15 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@drawable/ic_connection_error" />
 
+        <ProgressBar
+            android:id="@+id/user_progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/user_recycler"
+            app:layout_constraintEnd_toEndOf="@+id/user_recycler"
+            app:layout_constraintStart_toStartOf="@+id/user_recycler"
+            app:layout_constraintTop_toTopOf="@+id/user_recycler" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

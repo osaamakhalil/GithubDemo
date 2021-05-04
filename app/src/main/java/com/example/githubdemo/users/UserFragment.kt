@@ -61,14 +61,17 @@ class UserFragment : Fragment() {
             status?.let {
                 when (status) {
                     UserApiStatus.LOADING -> {
-                        ivStatus.visibility = View.VISIBLE
-                        ivStatus.setImageResource(R.drawable.loading_animation)
+                        userProgressBar.visibility = View.VISIBLE
+                        ivStatus.visibility = View.GONE
+
                     }
                     UserApiStatus.ERROR -> {
                         ivStatus.visibility = View.VISIBLE
+                        userProgressBar.visibility = View.GONE
                         ivStatus.setImageResource(R.drawable.ic_connection_error)
                     }
                     UserApiStatus.DONE -> {
+                        userProgressBar.visibility = View.GONE
                         ivStatus.visibility = View.GONE
                     }
                 }
