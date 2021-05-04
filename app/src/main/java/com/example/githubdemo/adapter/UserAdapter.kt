@@ -30,7 +30,6 @@ class UserAdapter : ListAdapter<UserResponse, UserAdapter.ViewHolder>(UserDiffCa
                 tvUserName.text = user.name
                 Glide.with(itemView.context)
                     .load(user.imageUrl)
-                    .placeholder(R.drawable.loading_animation)
                     .into(ivUserAvatar)
             }
         }
