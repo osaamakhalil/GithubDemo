@@ -1,17 +1,16 @@
 package com.example.githubdemo.users
 
+import android.app.Application
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.example.githubdemo.api.NetworkUtil
 import com.example.githubdemo.api.UserApiStatus
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.model.UserResponse
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val userRepository: UserRepositoryImpl) : ViewModel() {
+class UserViewModel(private val userRepository: UserRepositoryImpl, val app: Application) : AndroidViewModel(app) {
 
     // The internal MutableLiveData String that stores the status of the most recent request
     private val _status = MutableLiveData<UserApiStatus>()
@@ -30,17 +29,21 @@ class UserViewModel(private val userRepository: UserRepositoryImpl) : ViewModel(
 
     private fun getAllUsers() {
         viewModelScope.launch {
-            try {
-                _status.value = UserApiStatus.LOADING
-                val listResult = userRepository.getUsers()
-                if (listResult.isNotEmpty()) {
-                    _users.value = listResult
-                    _status.value = UserApiStatus.DONE
+            if (NetworkUtil.hasInternetConnection(app)) {
+                try {
+                    _status.value = UserApiStatus.LOADING
+                    val listResult = userRepository.getUsers()
+                    if (listResult.isNotEmpty()) {
+                        _users.value = listResult
+                        _status.value = UserApiStatus.DONE
+                    }
+                } catch (t: Throwable) {
+                    _status.value = UserApiStatus.ERROR
+                    Log.e("userViewModel", "${t.message}")
+                    _users.value = ArrayList()
                 }
-            } catch (t: Throwable) {
-                _status.value = UserApiStatus.ERROR
-                Log.e("userViewModel","${t.message}")
-                _users.value = ArrayList()
+            } else {
+                _status.value = UserApiStatus.NO_INTERNET_CONNECTION
             }
         }
     }
