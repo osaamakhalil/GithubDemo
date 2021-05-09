@@ -1,5 +1,7 @@
 package com.example.githubdemo.users
 
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,16 +23,17 @@ class UserFragment : Fragment() {
     lateinit var userAdapter: UserAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false)
+                DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false)
         setupRecyclerView()
 
         val repository = UserRepositoryImpl()
-        val viewModelFactory = UserViewModelProviderFactory(repository)
+        val application = requireActivity().application
+        val viewModelFactory = UserViewModelProviderFactory(repository, application)
         val userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java)
 
         userViewModel.users.observe(viewLifecycleOwner, Observer { usersList ->
@@ -73,6 +76,12 @@ class UserFragment : Fragment() {
                     UserApiStatus.DONE -> {
                         userProgressBar.visibility = View.GONE
                         ivStatus.visibility = View.GONE
+                    }
+                    UserApiStatus.NO_INTERNET_CONNECTION -> {
+                        userProgressBar.visibility = View.GONE
+                        tvNoInternet.visibility = View.VISIBLE
+
+
                     }
                 }
             }
