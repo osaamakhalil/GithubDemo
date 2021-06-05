@@ -9,6 +9,15 @@
         android:layout_height="match_parent"
         tools:context=".users.UserFragment">
 
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_recycler"
             android:layout_width="match_parent"
@@ -27,10 +36,13 @@
             app:layout_constraintVertical_bias="0.0"
             tools:listitem="@layout/item_user" />
 
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         <ImageView
             android:id="@+id/iv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/no_internet_connection"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
