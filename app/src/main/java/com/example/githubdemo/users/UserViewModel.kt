@@ -50,11 +50,4 @@ class UserViewModel(private val userRepository: UserRepositoryImpl, val app: App
         }
     }
 
-    fun swipeToRefresh(swipeRefresh: SwipeRefreshLayout, userAdapter: UserAdapter) {
-        swipeRefresh.setOnRefreshListener {
-            userAdapter.submitList(ArrayList())
-            getAllUsers()
-            swipeRefresh.isRefreshing = false
-        }
-    }
 }

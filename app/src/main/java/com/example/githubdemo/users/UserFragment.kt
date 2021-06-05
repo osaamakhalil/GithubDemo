@@ -50,8 +50,8 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val swipeRefresh = binding.swipeRefresh
-        userViewModel.swipeToRefresh(swipeRefresh,userAdapter)
+        swipeToRefresh()
+
     }
 
 
@@ -87,6 +87,15 @@ class UserFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun swipeToRefresh() {
+        val swipeRefresh = binding.swipeRefresh
+        swipeRefresh.setOnRefreshListener {
+            userAdapter.submitList(ArrayList())
+            userViewModel.getAllUsers()
+            swipeRefresh.isRefreshing = false
         }
     }
 }
