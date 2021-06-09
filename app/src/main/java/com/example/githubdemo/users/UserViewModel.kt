@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.githubdemo.adapter.UserAdapter
 import com.example.githubdemo.api.NetworkUtil
 import com.example.githubdemo.api.UserApiStatus
 import com.example.githubdemo.repository.UserRepositoryImpl
@@ -29,7 +28,7 @@ class UserViewModel(private val userRepository: UserRepositoryImpl, val app: App
         getAllUsers()
     }
 
-    fun getAllUsers() {
+    private fun getAllUsers() {
         viewModelScope.launch {
             if (NetworkUtil.hasInternetConnection(app)) {
                 try {
@@ -49,5 +48,11 @@ class UserViewModel(private val userRepository: UserRepositoryImpl, val app: App
             }
         }
     }
-
+     fun swipeToRefresh(swipeRefresh: SwipeRefreshLayout) {
+        swipeRefresh.setOnRefreshListener {
+            _users.value = ArrayList()
+            getAllUsers()
+            swipeRefresh.isRefreshing = false
+        }
+    }
 }
