@@ -4,10 +4,10 @@ import com.example.githubdemo.users.model.UserResponse
 
 
 class UserRepositoryImpl : UserRepository {
-    private val userDataSource: UserDataSource = UserDataSource()
+    private val userRemoteDataSource: UserRemoteDataSource = UserRemoteDataSource()
 
     override suspend fun getUsers(): List<UserResponse> {
-        return userDataSource.getUsers()
+        return userRemoteDataSource.getUsers()
     }
 
 }

@@ -5,7 +5,7 @@ import com.example.githubdemo.users.model.UserResponse
 
 
 
-class UserDataSource {
+class UserRemoteDataSource {
         suspend fun getUsers(): List<UserResponse> {
               return RetrofitBuilder.userApiService.getUsers()
 
