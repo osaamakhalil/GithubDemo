@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.UserAdapter
+import com.example.githubdemo.api.NetworkUtil
 import com.example.githubdemo.api.UserApiStatus
 import com.example.githubdemo.databinding.FragmentUserBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
@@ -24,14 +25,15 @@ class UserFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false)
         setupRecyclerView()
 
         val repository = UserRepositoryImpl()
         val application = requireActivity().application
-        val viewModelFactory = UserViewModelProviderFactory(repository, application)
+        val networkUtil = NetworkUtil(application)
+        val viewModelFactory = UserViewModelProviderFactory(repository, networkUtil)
         userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java)
 
         userViewModel.users.observe(viewLifecycleOwner, Observer { usersList ->
@@ -65,7 +67,7 @@ class UserFragment : Fragment() {
 
     private fun setStatus(binding: FragmentUserBinding, status: UserApiStatus) {
         binding.apply {
-            status?.let {
+            status.let {
                 when (status) {
                     UserApiStatus.LOADING -> {
                         userProgressBar.visibility = View.VISIBLE

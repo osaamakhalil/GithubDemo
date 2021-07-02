@@ -7,9 +7,8 @@ import android.os.Build
 
 enum class UserApiStatus { LOADING, ERROR, DONE, NO_INTERNET_CONNECTION }
 
-class NetworkUtil {
-    companion object {
-        fun hasInternetConnection(context: Context): Boolean {
+class NetworkUtil(private val context: Context) {
+        fun hasInternetConnection(): Boolean {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as
                     ConnectivityManager
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -25,5 +24,4 @@ class NetworkUtil {
             }
             return false
         }
-    }
 }

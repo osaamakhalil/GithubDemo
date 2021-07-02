@@ -1,6 +1,5 @@
 package com.example.githubdemo.users
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -10,8 +9,8 @@ import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.model.UserResponse
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val userRepository: UserRepositoryImpl, val app: Application) :
-    AndroidViewModel(app) {
+class UserViewModel(private val userRepository: UserRepositoryImpl, private val networkUtil:NetworkUtil) :
+    ViewModel() {
 
     // The internal MutableLiveData String that stores the status of the most recent request
     private val _status = MutableLiveData<UserApiStatus>()
@@ -30,7 +29,7 @@ class UserViewModel(private val userRepository: UserRepositoryImpl, val app: App
 
     private fun getAllUsers() {
         viewModelScope.launch {
-            if (NetworkUtil.hasInternetConnection(app)) {
+            if (networkUtil.hasInternetConnection()) {
                 try {
                     _status.value = UserApiStatus.LOADING
                     val listResult = userRepository.getUsers()
