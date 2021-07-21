@@ -27,7 +27,7 @@ class UserViewModel(private val userRepository: UserRepositoryImpl, private val 
         getAllUsers()
     }
 
-    private fun getAllUsers() {
+     fun getAllUsers() {
         viewModelScope.launch {
             if (networkUtil.hasInternetConnection()) {
                 try {

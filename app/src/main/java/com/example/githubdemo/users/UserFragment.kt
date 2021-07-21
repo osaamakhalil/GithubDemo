@@ -18,7 +18,7 @@ import com.example.githubdemo.repository.UserRepositoryImpl
 
 class UserFragment : Fragment() {
 
-    private var _binding: FragmentUserBinding?=null
+    private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
     lateinit var userAdapter: UserAdapter
     lateinit var userViewModel: UserViewModel
@@ -55,6 +55,7 @@ class UserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val swipeRefresh = binding.swipeRefresh
         userViewModel.swipeToRefresh(swipeRefresh)
+        tryAgain()
     }
 
 
@@ -62,7 +63,12 @@ class UserFragment : Fragment() {
         userAdapter = UserAdapter()
         binding.apply {
             userRecycler.adapter = userAdapter
+        }
+    }
 
+    private fun tryAgain() {
+        binding.btTryAgain.setOnClickListener {
+            userViewModel.getAllUsers()
         }
     }
 
@@ -84,10 +90,12 @@ class UserFragment : Fragment() {
                         userProgressBar.visibility = View.GONE
                         ivStatus.visibility = View.GONE
                         tvNoInternet.visibility = View.GONE
+                        btTryAgain.visibility = View.GONE
                     }
                     UserApiStatus.NO_INTERNET_CONNECTION -> {
                         userProgressBar.visibility = View.GONE
                         tvNoInternet.visibility = View.VISIBLE
+                        btTryAgain.visibility = View.VISIBLE
                     }
                 }
             }
