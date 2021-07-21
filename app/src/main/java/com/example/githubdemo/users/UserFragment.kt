@@ -18,7 +18,8 @@ import com.example.githubdemo.repository.UserRepositoryImpl
 
 class UserFragment : Fragment() {
 
-    lateinit var binding: FragmentUserBinding
+    private var _binding: FragmentUserBinding?=null
+    private val binding get() = _binding!!
     lateinit var userAdapter: UserAdapter
     lateinit var userViewModel: UserViewModel
 
@@ -26,7 +27,7 @@ class UserFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding =
+        _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false)
         setupRecyclerView()
 
