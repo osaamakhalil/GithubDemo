@@ -83,6 +83,7 @@ class UserFragment : Fragment() {
                     UserApiStatus.DONE -> {
                         userProgressBar.visibility = View.GONE
                         ivStatus.visibility = View.GONE
+                        tvNoInternet.visibility = View.GONE
                     }
                     UserApiStatus.NO_INTERNET_CONNECTION -> {
                         userProgressBar.visibility = View.GONE
