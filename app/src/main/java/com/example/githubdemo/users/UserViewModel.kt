@@ -2,15 +2,19 @@ package com.example.githubdemo.users
 
 import android.util.Log
 import androidx.lifecycle.*
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.githubdemo.api.NetworkUtil
 import com.example.githubdemo.api.UserApiStatus
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.model.UserResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val userRepository: UserRepositoryImpl, private val networkUtil:NetworkUtil) :
+class UserViewModel(
+    private val userRepository: UserRepositoryImpl,
+    private val networkUtil: NetworkUtil
+) :
     ViewModel() {
+    private var userPerPage = 10
 
     // The internal MutableLiveData String that stores the status of the most recent request
     private val _status = MutableLiveData<UserApiStatus>()
@@ -27,31 +31,33 @@ class UserViewModel(private val userRepository: UserRepositoryImpl, private val 
         getAllUsers()
     }
 
-     fun getAllUsers() {
-        viewModelScope.launch {
+    fun getAllUsers() {
+        viewModelScope.launch(Dispatchers.IO) {
             if (networkUtil.hasInternetConnection()) {
                 try {
-                    _status.value = UserApiStatus.LOADING
-                    val listResult = userRepository.getUsers()
+                    _status.postValue(UserApiStatus.LOADING)
+                    val listResult = userRepository.getUsers(userPerPage)
                     if (listResult.isNotEmpty()) {
-                        _users.value = listResult
-                        _status.value = UserApiStatus.DONE
+                        _users.postValue(listResult)
+                        _status.postValue(UserApiStatus.DONE)
                     }
                 } catch (t: Throwable) {
-                    _status.value = UserApiStatus.ERROR
+                    _status.postValue(UserApiStatus.ERROR)
                     Log.e("userViewModel", "${t.message}")
-                    _users.value = ArrayList()
+
+                    _users.postValue(emptyList())
                 }
             } else {
-                _status.value = UserApiStatus.NO_INTERNET_CONNECTION
+                _status.postValue(UserApiStatus.NO_INTERNET_CONNECTION)
             }
         }
     }
-     fun swipeToRefresh(swipeRefresh: SwipeRefreshLayout) {
-        swipeRefresh.setOnRefreshListener {
-            _users.value = ArrayList()
+
+    fun needMoreUsers() {
+        if (userPerPage != 100) {
+            Log.e("viewModelPages", " -> $userPerPage")
+            userPerPage += 10
             getAllUsers()
-            swipeRefresh.isRefreshing = false
         }
     }
 }

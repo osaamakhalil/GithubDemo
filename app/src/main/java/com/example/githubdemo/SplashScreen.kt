@@ -1,19 +1,14 @@
 package com.example.githubdemo
 
 import android.os.Bundle
-import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.githubdemo.databinding.FragmentSplashScreenBinding
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 class SplashScreen : Fragment() {
@@ -25,7 +20,7 @@ class SplashScreen : Fragment() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launchWhenStarted {
-            delay(3000)
+            delay(2000)
             findNavController().navigate(R.id.toUserFragment2)
         }
     }

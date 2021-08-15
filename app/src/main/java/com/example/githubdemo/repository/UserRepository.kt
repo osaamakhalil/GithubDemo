@@ -4,5 +4,5 @@ import com.example.githubdemo.users.model.UserResponse
 
 interface UserRepository {
 
-    suspend fun getUsers() : List<UserResponse>
+    suspend fun getUsers(page:Int) : List<UserResponse>
 }
