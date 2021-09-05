@@ -85,6 +85,7 @@ class UserFragment : Fragment() {
                     firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
                     if (loading) {
+                        binding.userProgressBar.visibility = View.GONE
                         if (totalItemCount > previousTotal) {
                             loading = false
                             previousTotal = totalItemCount
@@ -93,6 +94,7 @@ class UserFragment : Fragment() {
                     if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                         userViewModel.needMoreUsers()
                         loading = true
+
                     }
 
                 }
