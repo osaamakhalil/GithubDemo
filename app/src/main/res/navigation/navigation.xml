@@ -3,21 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/splashScreen">
+    app:startDestination="@id/userFragment">
 
     <fragment
         android:id="@+id/userFragment"
         android:name="com.example.githubdemo.users.UserFragment"
         android:label="UserFragment" />
-    <fragment
-        android:id="@+id/splashScreen"
-        android:name="com.example.githubdemo.SplashScreen"
-        android:label="fragment_splash_screen"
-        tools:layout="@layout/fragment_splash_screen" >
-        <action
-            android:id="@+id/toUserFragment2"
-            app:destination="@id/userFragment"
-            app:popUpTo="@id/splashScreen"
-            app:popUpToInclusive="true" />
-    </fragment>
 </navigation>
