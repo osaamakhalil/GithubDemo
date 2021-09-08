@@ -58,6 +58,7 @@ class UserViewModel(
             Log.e("viewModelPages", " -> $userPerPage")
             userPerPage += 10
             getAllUsers()
+            _status.postValue(UserApiStatus.PAGE_LOADING)
         }
     }
 }

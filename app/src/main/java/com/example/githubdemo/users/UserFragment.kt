@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,17 +47,15 @@ class UserFragment : Fragment() {
         userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java)
 
 
-        userViewModel.users.observe(viewLifecycleOwner, Observer { usersList ->
+        userViewModel.users.observe(viewLifecycleOwner, { usersList ->
             usersList?.let {
                 userAdapter.submitList(usersList)
             }
         })
         //for status
-        userViewModel.status.observe(viewLifecycleOwner, Observer { status ->
+        userViewModel.status.observe(viewLifecycleOwner, { status ->
             setStatus(binding, status)
         })
-
-
         return binding.root
     }
 
@@ -94,9 +91,7 @@ class UserFragment : Fragment() {
                     if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                         userViewModel.needMoreUsers()
                         loading = true
-
                     }
-
                 }
             }
         })
@@ -128,18 +123,24 @@ class UserFragment : Fragment() {
                     UserApiStatus.ERROR -> {
                         ivStatus.visibility = View.VISIBLE
                         userProgressBar.visibility = View.GONE
+                        progressPage.visibility = View.GONE
                         ivStatus.setImageResource(R.drawable.ic_connection_error)
                     }
                     UserApiStatus.DONE -> {
                         userProgressBar.visibility = View.GONE
+                        progressPage.visibility = View.GONE
                         ivStatus.visibility = View.GONE
                         tvNoInternet.visibility = View.GONE
                         btTryAgain.visibility = View.GONE
                     }
                     UserApiStatus.NO_INTERNET_CONNECTION -> {
                         userProgressBar.visibility = View.GONE
+                        progressPage.visibility = View.GONE
                         tvNoInternet.visibility = View.VISIBLE
                         btTryAgain.visibility = View.VISIBLE
+                    }
+                    UserApiStatus.PAGE_LOADING -> {
+                        progressPage.visibility = View.VISIBLE
                     }
                 }
             }
