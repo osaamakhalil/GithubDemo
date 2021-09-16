@@ -6,26 +6,29 @@ import com.example.githubdemo.api.NetworkUtil
 import com.example.githubdemo.api.UserApiStatus
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.model.UserResponse
+import com.example.githubdemo.utils.Results
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class UserViewModel(
     private val userRepository: UserRepositoryImpl,
     private val networkUtil: NetworkUtil
-) :
-    ViewModel() {
-    private var userPerPage = 10
+) : ViewModel() {
+    //for paging handles
+    private var since = 0
 
     // The internal MutableLiveData String that stores the status of the most recent request
-    private val _status = MutableLiveData<UserApiStatus>()
+    private val _internetStatus = MutableLiveData<UserApiStatus>()
 
     // The external immutable LiveData for the request status String
-    val status: LiveData<UserApiStatus>
-        get() = _status
+    val internetStatus: LiveData<UserApiStatus>
+        get() = _internetStatus
 
-    private val _users = MutableLiveData<List<UserResponse>>()
-    val users: LiveData<List<UserResponse>>
+    private val _users = MutableLiveData<Results<List<UserResponse>>>()
+    val users: LiveData<Results<List<UserResponse>>>
         get() = _users
+    var userResponse: MutableList<UserResponse>? = null
 
     init {
         getAllUsers()
@@ -35,30 +38,30 @@ class UserViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             if (networkUtil.hasInternetConnection()) {
                 try {
-                    _status.postValue(UserApiStatus.LOADING)
-                    val listResult = userRepository.getUsers(userPerPage)
+                    if (userResponse == null) _users.postValue(Results.Loading())
+                    val listResult = userRepository.getUsers(since)
                     if (listResult.isNotEmpty()) {
-                        _users.postValue(listResult)
-                        _status.postValue(UserApiStatus.DONE)
+                        if (userResponse == null) {
+                            userResponse = listResult.toMutableList()
+                        } else {
+                            val oldUserList = userResponse
+                            oldUserList?.addAll(listResult)
+                        }
+                        _users.postValue(Results.Success(userResponse))
+                        val lastUser = listResult.last()
+                        since = lastUser.id
                     }
                 } catch (t: Throwable) {
-                    _status.postValue(UserApiStatus.ERROR)
                     Log.e("userViewModel", "${t.message}")
-
-                    _users.postValue(emptyList())
+                    _users.postValue(Results.Error(t.message, emptyList()))
                 }
             } else {
-                _status.postValue(UserApiStatus.NO_INTERNET_CONNECTION)
+                _internetStatus.postValue(UserApiStatus.NO_INTERNET_CONNECTION)
             }
         }
     }
 
     fun needMoreUsers() {
-        if (userPerPage != 100) {
-            Log.e("viewModelPages", " -> $userPerPage")
-            userPerPage += 10
-            getAllUsers()
-            _status.postValue(UserApiStatus.PAGE_LOADING)
-        }
+        getAllUsers()
     }
 }

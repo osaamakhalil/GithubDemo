@@ -9,6 +9,6 @@ interface UserApiService {
 
     @GET("users")
     suspend fun getUsers(
-        @Query("per_page") page:Int
+        @Query("since") page:Int
     ): List<UserResponse>
 }
