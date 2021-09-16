@@ -18,6 +18,8 @@ import com.example.githubdemo.viewholder.showLoadingView
 
 class UserAdapter() : ListAdapter<UserResponse, RecyclerView.ViewHolder>(differCallback) {
 
+
+    //helper class for computing the difference between two lists via DiffUtil on a background thread
     val differ = AsyncListDiffer(this, differCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -52,9 +54,6 @@ class UserAdapter() : ListAdapter<UserResponse, RecyclerView.ViewHolder>(differC
             USER_LIST_VIEW
     }
 
-    override fun submitList(list: List<UserResponse>?) {
-        super.submitList(list?.let { ArrayList(it) })
-    }
 
     class UserViewHolder(private val binding: ItemUserBinding) :
         RecyclerView.ViewHolder(binding.root) {
