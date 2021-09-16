@@ -20,8 +20,6 @@
                 android:id="@+id/user_recycler"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:paddingBottom="50dp"
-                android:clipToPadding="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -29,30 +27,20 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
                 tools:listitem="@layout/item_user" />
-
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <ProgressBar
-            android:id="@+id/progress_page"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:background="@android:color/transparent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
         <ImageView
-            android:id="@+id/iv_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/no_internet_connection"
+            android:id="@+id/iv_server_error"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/server_error"
             android:visibility="gone"
+            android:src="@drawable/ic_server_error"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/ic_connection_error" />
+            tools:srcCompat="@drawable/ic_server_error" />
 
         <ProgressBar
             android:id="@+id/user_progressBar"
