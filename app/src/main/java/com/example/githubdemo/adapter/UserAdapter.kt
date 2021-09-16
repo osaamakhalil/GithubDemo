@@ -18,9 +18,6 @@ import com.example.githubdemo.viewholder.showLoadingView
 
 class UserAdapter() : ListAdapter<UserResponse, RecyclerView.ViewHolder>(differCallback) {
 
-    var showLoading = false
-
-
     val differ = AsyncListDiffer(this, differCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
