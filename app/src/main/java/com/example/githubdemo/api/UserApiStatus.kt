@@ -5,7 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
 import android.os.Build
 
-enum class UserApiStatus { LOADING, ERROR, DONE, NO_INTERNET_CONNECTION,PAGE_LOADING }
+enum class UserApiStatus {NO_INTERNET_CONNECTION}
 
 class NetworkUtil(private val context: Context) {
         fun hasInternetConnection(): Boolean {
