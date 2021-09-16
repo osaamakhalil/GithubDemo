@@ -12,9 +12,14 @@ import com.example.githubdemo.databinding.PageProgressBarBinding
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Constant.Companion.USER_LIST_VIEW
 import com.example.githubdemo.utils.Constant.Companion.VIEW_TYPE_LOADING
+import com.example.githubdemo.viewholder.LoadingViewHolder
+import com.example.githubdemo.viewholder.showLoadingView
 
 
 class UserAdapter() : ListAdapter<UserResponse, RecyclerView.ViewHolder>(differCallback) {
+
+    var showLoading = false
+
 
     val differ = AsyncListDiffer(this, differCallback)
 
@@ -66,15 +71,6 @@ class UserAdapter() : ListAdapter<UserResponse, RecyclerView.ViewHolder>(differC
             }
         }
     }
-
-    class LoadingViewHolder(private val binding: PageProgressBarBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.pageProgress
-        }
-    }
-
-    private fun showLoadingView(viewHolder: LoadingViewHolder, position: Int) {}
 
 
     private fun populateItemRows(viewHolder: UserViewHolder, position: Int) {
