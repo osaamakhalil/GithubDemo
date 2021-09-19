@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +20,7 @@ import com.example.githubdemo.api.UserApiStatus
 import com.example.githubdemo.databinding.FragmentUserBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.utils.Results
+import com.google.android.material.snackbar.Snackbar
 
 
 class UserFragment : Fragment() {
@@ -27,6 +30,8 @@ class UserFragment : Fragment() {
     private lateinit var userAdapter: UserAdapter
     private lateinit var userViewModel: UserViewModel
     private lateinit var layoutManager: LinearLayoutManager
+
+    var noInternet = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +60,7 @@ class UserFragment : Fragment() {
                         hideServerError()
                         hideNoInternet()
                         response.data?.let { userList ->
-                            userAdapter.differ.submitList(userList)
+                            userAdapter.submitList(userList)
                         }
                     }
                     is Results.Loading -> {
@@ -67,7 +72,7 @@ class UserFragment : Fragment() {
                         hideProgress()
                         hideNoInternet()
                         showServerError()
-                        userAdapter.differ.submitList(emptyList())
+                        userAdapter.submitList(emptyList())
                         response.message?.let { message ->
                             Log.e("UserFragment", "An error occured: $message")
                         }
@@ -75,16 +80,37 @@ class UserFragment : Fragment() {
                 }
             }
         })
-        //for internetStatus
-        userViewModel.internetStatus.observe(viewLifecycleOwner, { status ->
-            if (status == UserApiStatus.NO_INTERNET_CONNECTION) {
-                userAdapter.differ.submitList(emptyList())
+        // for internetStatus
+//        userViewModel.internetStatus.observe(viewLifecycleOwner, { status ->
+//            if (status == UserApiStatus.NO_INTERNET_CONNECTION) {
+//                if (userAdapter.itemCount == 0) {
+//                    hideProgress()
+//                    hideServerError()
+//                    showNoInternet()
+//                    noInternet = true
+//                } else {
+//                    Snackbar.make(view, "NO INTERNET CONNECTION !!", Snackbar.LENGTH_SHORT).show()
+//                    noInternet = true
+//                }
+//            } else {
+//                noInternet = false
+//            }
+//        })
+
+        userViewModel.hasInternet.observe(viewLifecycleOwner, { hasInternetConnection ->
+            if (hasInternetConnection) {
+                noInternet = false
+            } else if (userAdapter.itemCount == 0) {
                 hideProgress()
                 hideServerError()
                 showNoInternet()
+                noInternet = true
+            } else {
+                Snackbar.make(view, "NO INTERNET CONNECTION !!", Snackbar.LENGTH_SHORT).show()
+                noInternet = true
             }
-        })
 
+        })
         swipeRefresh()
         tryAgain()
         setupRecyclerView()
@@ -92,7 +118,7 @@ class UserFragment : Fragment() {
 
 
     private fun setupRecyclerView() {
-        userAdapter = UserAdapter()
+        userAdapter = UserAdapter(this)
         layoutManager = LinearLayoutManager(activity)
         binding.apply {
             userRecycler.layoutManager = layoutManager
@@ -134,7 +160,6 @@ class UserFragment : Fragment() {
     private fun swipeRefresh() {
         val swipeRefresh = binding.swipeRefresh
         swipeRefresh.setOnRefreshListener {
-            userAdapter.submitList(emptyList())
             userViewModel.getAllUsers()
             swipeRefresh.isRefreshing = false
         }

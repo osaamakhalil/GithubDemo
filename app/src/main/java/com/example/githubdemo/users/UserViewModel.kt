@@ -20,23 +20,35 @@ class UserViewModel(
 
     // The internal MutableLiveData String that stores the status of the most recent request
     private val _internetStatus = MutableLiveData<UserApiStatus>()
-
-    // The external immutable LiveData for the request status String
     val internetStatus: LiveData<UserApiStatus>
         get() = _internetStatus
 
     private val _users = MutableLiveData<Results<List<UserResponse>>>()
     val users: LiveData<Results<List<UserResponse>>>
         get() = _users
-    var userResponse: MutableList<UserResponse>? = null
+
+    private val _hasInternetConnection = MutableLiveData<Boolean>()
+    val hasInternet: LiveData<Boolean>
+        get() = _hasInternetConnection
+
+
+    private var userResponse: MutableList<UserResponse>? = null
 
     init {
-        getAllUsers()
+        if (networkUtil.hasInternetConnection()) {
+            _hasInternetConnection.postValue(true)
+            getAllUsers()
+        } else {
+            _hasInternetConnection.postValue(false)
+            _internetStatus.postValue(UserApiStatus.NO_INTERNET_CONNECTION)
+        }
     }
 
     fun getAllUsers() {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (networkUtil.hasInternetConnection()) {
+
+        if (networkUtil.hasInternetConnection()) {
+            _hasInternetConnection.postValue(true)
+            viewModelScope.launch(Dispatchers.IO) {
                 try {
                     if (userResponse == null) _users.postValue(Results.Loading())
                     val listResult = userRepository.getUsers(since)
@@ -55,9 +67,10 @@ class UserViewModel(
                     Log.e("userViewModel", "${t.message}")
                     _users.postValue(Results.Error(t.message, emptyList()))
                 }
-            } else {
-                _internetStatus.postValue(UserApiStatus.NO_INTERNET_CONNECTION)
             }
+        } else {
+            _hasInternetConnection.postValue(false)
+            _internetStatus.postValue(UserApiStatus.NO_INTERNET_CONNECTION)
         }
     }
 
