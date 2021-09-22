@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.UserAdapter
 import com.example.githubdemo.api.NetworkUtil
-import com.example.githubdemo.api.UserApiStatus
 import com.example.githubdemo.databinding.FragmentUserBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.utils.Results
@@ -30,7 +28,7 @@ class UserFragment : Fragment() {
     private lateinit var userAdapter: UserAdapter
     private lateinit var userViewModel: UserViewModel
     private lateinit var layoutManager: LinearLayoutManager
-
+    var isScrolling = false
     var noInternet = false
 
     override fun onCreateView(
@@ -52,73 +50,61 @@ class UserFragment : Fragment() {
         userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java)
 
 
-        userViewModel.users.observe(viewLifecycleOwner, { usersResults ->
+        userViewModel.usersStatus.observe(viewLifecycleOwner, { usersResults ->
             usersResults?.let { response ->
                 when (response) {
                     is Results.Success -> {
-                        hideProgress()
-                        hideServerError()
-                        hideNoInternet()
+                        progressbarView(false)
+                        serverErrorView(false)
+                        noInternetView(false)
+                        noInternet = response.isErrorNext
                         response.data?.let { userList ->
                             userAdapter.submitList(userList)
+                            userAdapter.notifyItemChanged(userList.lastIndex)
                         }
                     }
-                    is Results.Loading -> {
-                        showProgress()
-                        hideNoInternet()
-                        hideServerError()
+                    Results.Loading -> {
+                        progressbarView(true)
+                        noInternetView(false)
+                        serverErrorView(false)
+                        noInternet = false
                     }
                     is Results.Error -> {
-                        hideProgress()
-                        hideNoInternet()
-                        showServerError()
                         userAdapter.submitList(emptyList())
+                        progressbarView(false)
+                        noInternetView(false)
+                        serverErrorView(true)
+                        noInternet = false
                         response.message?.let { message ->
                             Log.e("UserFragment", "An error occured: $message")
+                        }
+                    }
+                    Results.NoInternet -> {
+                        noInternet = true
+                        if (response.data.isNullOrEmpty()) {
+                            progressbarView(false)
+                            serverErrorView(false)
+                            noInternetView(true)
                         }
                     }
                 }
             }
         })
-        // for internetStatus
-//        userViewModel.internetStatus.observe(viewLifecycleOwner, { status ->
-//            if (status == UserApiStatus.NO_INTERNET_CONNECTION) {
-//                if (userAdapter.itemCount == 0) {
-//                    hideProgress()
-//                    hideServerError()
-//                    showNoInternet()
-//                    noInternet = true
-//                } else {
-//                    Snackbar.make(view, "NO INTERNET CONNECTION !!", Snackbar.LENGTH_SHORT).show()
-//                    noInternet = true
-//                }
-//            } else {
-//                noInternet = false
-//            }
-//        })
-
-        userViewModel.hasInternet.observe(viewLifecycleOwner, { hasInternetConnection ->
-            if (hasInternetConnection) {
-                noInternet = false
-            } else if (userAdapter.itemCount == 0) {
-                hideProgress()
-                hideServerError()
-                showNoInternet()
+        userViewModel.showSnackBar.observe(viewLifecycleOwner, { showSnackBar ->
+            if (showSnackBar == true) {
                 noInternet = true
-            } else {
                 Snackbar.make(view, "NO INTERNET CONNECTION !!", Snackbar.LENGTH_SHORT).show()
-                noInternet = true
             }
-
         })
         swipeRefresh()
         tryAgain()
         setupRecyclerView()
     }
 
-
     private fun setupRecyclerView() {
-        userAdapter = UserAdapter(this)
+        userAdapter = UserAdapter(this) {
+            userViewModel.getAllUsers()
+        }
         layoutManager = LinearLayoutManager(activity)
         binding.apply {
             userRecycler.layoutManager = layoutManager
@@ -128,8 +114,9 @@ class UserFragment : Fragment() {
 
     }
 
-    var isLoading = false
-    var isScrolling = false
+    /*
+    * handle pagination
+    *  */
     private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
@@ -139,12 +126,11 @@ class UserFragment : Fragment() {
             val visibleItemCount = layoutManager.childCount
             val totalItemCount = layoutManager.itemCount
 
-            val isNotLoading = !isLoading
             val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
             val isNotAtBeginning = firstVisibleItemPosition >= 0
-            val shouldPaginate = isNotLoading && isAtLastItem && isNotAtBeginning && isScrolling
+            val shouldPaginate = isAtLastItem && isNotAtBeginning && isScrolling
             if (shouldPaginate) {
-                userViewModel.needMoreUsers()
+                userViewModel.getAllUsers()
                 isScrolling = false
             }
         }
@@ -160,7 +146,7 @@ class UserFragment : Fragment() {
     private fun swipeRefresh() {
         val swipeRefresh = binding.swipeRefresh
         swipeRefresh.setOnRefreshListener {
-            userViewModel.getAllUsers()
+            userViewModel.swipeToRefresh()
             swipeRefresh.isRefreshing = false
         }
     }
@@ -171,30 +157,20 @@ class UserFragment : Fragment() {
         }
     }
 
-    private fun hideNoInternet() {
-        binding.tvNoInternet.visibility = View.GONE
-        binding.btTryAgain.visibility = View.GONE
+    /*
+    *handle views visibility
+    *  */
+    private fun noInternetView(showViews: Boolean) {
+        binding.tvNoInternet.isVisible = showViews
+        binding.btTryAgain.isVisible = showViews
     }
 
-    private fun showNoInternet() {
-        binding.tvNoInternet.visibility = View.VISIBLE
-        binding.btTryAgain.visibility = View.VISIBLE
+    private fun progressbarView(showViews: Boolean) {
+        binding.userProgressBar.isVisible = showViews
     }
 
-    private fun hideProgress() {
-        binding.userProgressBar.visibility = View.GONE
+    private fun serverErrorView(showViews: Boolean) {
+        binding.ivServerError.isVisible = showViews
+        binding.btTryAgain.isVisible = showViews
     }
-
-    private fun showProgress() {
-        binding.userProgressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideServerError() {
-        binding.ivServerError.visibility = View.GONE
-    }
-
-    private fun showServerError() {
-        binding.ivServerError.visibility = View.VISIBLE
-    }
-
 }
