@@ -3,12 +3,11 @@ package com.example.githubdemo.users
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.githubdemo.api.NetworkUtil
-import com.example.githubdemo.api.UserApiStatus
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Results
+import com.example.githubdemo.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class UserViewModel(
@@ -18,50 +17,78 @@ class UserViewModel(
     //for paging handles
     private var since = 0
 
-    // The internal MutableLiveData String that stores the status of the most recent request
-    private val _internetStatus = MutableLiveData<UserApiStatus>()
+    private val _usersStatus = MutableLiveData<Results<List<UserResponse>>>()
+    val usersStatus: LiveData<Results<List<UserResponse>>>
+        get() = _usersStatus
 
-    // The external immutable LiveData for the request status String
-    val internetStatus: LiveData<UserApiStatus>
-        get() = _internetStatus
+    //add a new results to this list and use it to send to the view to present it
+    private var userResponse: MutableList<UserResponse>? = null
 
-    private val _users = MutableLiveData<Results<List<UserResponse>>>()
-    val users: LiveData<Results<List<UserResponse>>>
-        get() = _users
-    var userResponse: MutableList<UserResponse>? = null
+    //use single live event to use it to show snack bar
+    private val _showSnackBar = SingleLiveEvent<Boolean>()
+    val showSnackBar: SingleLiveEvent<Boolean>
+        get() = _showSnackBar
 
     init {
         getAllUsers()
     }
 
+    /*
+    * make call to get all user list
+    * */
     fun getAllUsers() {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (networkUtil.hasInternetConnection()) {
+        if (networkUtil.hasInternetConnection()) {
+            viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    if (userResponse == null) _users.postValue(Results.Loading())
-                    val listResult = userRepository.getUsers(since)
-                    if (listResult.isNotEmpty()) {
+                    if (userResponse == null) _usersStatus.postValue(Results.Loading)
+                    val newList = userRepository.getUsers(since)
+                    if (newList.isNotEmpty()) {
                         if (userResponse == null) {
-                            userResponse = listResult.toMutableList()
+                            userResponse = newList.toMutableList()
                         } else {
-                            val oldUserList = userResponse
-                            oldUserList?.addAll(listResult)
+                            userResponse?.addAll(newList)
                         }
-                        _users.postValue(Results.Success(userResponse))
-                        val lastUser = listResult.last()
+                        _usersStatus.postValue(
+                            Results.Success(
+                                userResponse,
+                                isErrorNext = false
+                            )
+                        )
+                        val lastUser = newList.last()
                         since = lastUser.id
                     }
                 } catch (t: Throwable) {
                     Log.e("userViewModel", "${t.message}")
-                    _users.postValue(Results.Error(t.message, emptyList()))
+                    _usersStatus.postValue(Results.Error(t.message, emptyList()))
                 }
+            }
+        } else {
+            //if no list to show, then show some icon on center of screen
+            if (userResponse == null) {
+                _usersStatus.postValue(Results.NoInternet)
             } else {
-                _internetStatus.postValue(UserApiStatus.NO_INTERNET_CONNECTION)
+                //if list not empty, used that to show progressbar on bottom of page
+                _usersStatus.postValue(
+                    Results.Success(
+                        userResponse,
+                        isErrorNext = true
+                    )
+                )
             }
         }
     }
-
-    fun needMoreUsers() {
-        getAllUsers()
+/*
+* use this fun when swipe screen to refresh and make call to get the first page
+* with the id "since" = 0
+*  */
+    fun swipeToRefresh() {
+        if (networkUtil.hasInternetConnection()) {
+            since = 0
+            userResponse = mutableListOf()
+            getAllUsers()
+            _showSnackBar.postValue(false)
+        } else {
+            _showSnackBar.postValue(true)
+        }
     }
 }
