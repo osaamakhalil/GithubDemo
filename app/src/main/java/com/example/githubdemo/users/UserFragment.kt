@@ -92,7 +92,6 @@ class UserFragment : Fragment() {
         })
         userViewModel.showSnackBar.observe(viewLifecycleOwner, { showSnackBar ->
             if (showSnackBar == true) {
-                noInternet = true
                 Snackbar.make(view, "NO INTERNET CONNECTION !!", Snackbar.LENGTH_SHORT).show()
             }
         })
