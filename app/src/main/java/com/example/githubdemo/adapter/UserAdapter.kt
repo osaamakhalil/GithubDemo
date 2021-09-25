@@ -16,7 +16,10 @@ import com.example.githubdemo.viewholder.UserViewHolder
 import com.example.githubdemo.viewholder.showLoadingView
 
 
-class UserAdapter(val userFragment: UserFragment, private val onTryAgainClick: () -> Unit) :
+class UserAdapter(
+    private val userViewModel: UserViewModel,
+    private val onTryAgainClick: () -> Unit
+) :
     ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallBack()) {
 
 
@@ -37,7 +40,7 @@ class UserAdapter(val userFragment: UserFragment, private val onTryAgainClick: (
         if (viewHolder is UserViewHolder) {
             populateItemRows(viewHolder, position)
         } else if (viewHolder is NetworkStatusViewHolder) {
-            showLoadingView(viewHolder, position, userFragment)
+            showLoadingView(viewHolder, position, userViewModel)
         }
     }
 

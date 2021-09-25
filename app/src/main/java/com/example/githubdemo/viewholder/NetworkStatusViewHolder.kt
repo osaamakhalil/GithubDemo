@@ -3,10 +3,10 @@ package com.example.githubdemo.viewholder
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.databinding.NetworkStatusBinding
-import com.example.githubdemo.users.UserFragment
+import com.example.githubdemo.users.UserViewModel
 
 class NetworkStatusViewHolder(
-    private val binding: NetworkStatusBinding,
+    binding: NetworkStatusBinding,
     private val onTryAgainClick: () -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -21,11 +21,14 @@ class NetworkStatusViewHolder(
 
 }
 
-fun showLoadingView(viewHolder: NetworkStatusViewHolder, position: Int, userFragment: UserFragment) {
+fun showLoadingView(
+    viewHolder: NetworkStatusViewHolder,
+    position: Int,
+    userViewModel: UserViewModel
+) {
     viewHolder.bind()
     viewHolder.apply {
-        if (userFragment.noInternet) {
-
+        if (userViewModel.noInternet) {
             pagingProgress.visibility = View.GONE
             btTryAgain.visibility = View.VISIBLE
             tvNoInternet.visibility = View.VISIBLE
