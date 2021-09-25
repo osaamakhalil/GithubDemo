@@ -16,6 +16,7 @@ class UserViewModel(
 ) : ViewModel() {
     //for paging handles
     private var since = 0
+    var noInternet = false
 
     private val _usersStatus = MutableLiveData<Results<List<UserResponse>>>()
     val usersStatus: LiveData<Results<List<UserResponse>>>
@@ -38,6 +39,7 @@ class UserViewModel(
     * */
     fun getAllUsers() {
         if (networkUtil.hasInternetConnection()) {
+            noInternet = false
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     if (userResponse == null) _usersStatus.postValue(Results.Loading)
@@ -51,7 +53,6 @@ class UserViewModel(
                         _usersStatus.postValue(
                             Results.Success(
                                 userResponse,
-                                isErrorNext = false
                             )
                         )
                         val lastUser = newList.last()
@@ -65,29 +66,33 @@ class UserViewModel(
         } else {
             //if no list to show, then show some icon on center of screen
             if (userResponse == null) {
+                noInternet = true
                 _usersStatus.postValue(Results.NoInternet)
             } else {
-                //if list not empty, used that to show progressbar on bottom of page
+                noInternet = true
+                //if list not empty, used that to show no internet on bottom of page
                 _usersStatus.postValue(
                     Results.Success(
-                        userResponse,
-                        isErrorNext = true
+                        userResponse
                     )
                 )
             }
         }
     }
-/*
-* use this fun when swipe screen to refresh and make call to get the first page
-* with the id "since" = 0
-*  */
+
+    /*
+    * use this fun when swipe screen to refresh and make call to get the first page
+    * with the id "since" = 0
+    *  */
     fun swipeToRefresh() {
         if (networkUtil.hasInternetConnection()) {
+            noInternet = false
             since = 0
             userResponse = mutableListOf()
             getAllUsers()
             _showSnackBar.postValue(false)
         } else {
+            noInternet = true
             _showSnackBar.postValue(true)
         }
     }

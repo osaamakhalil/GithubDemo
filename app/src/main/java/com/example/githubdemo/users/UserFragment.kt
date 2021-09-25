@@ -29,7 +29,6 @@ class UserFragment : Fragment() {
     private lateinit var userViewModel: UserViewModel
     private lateinit var layoutManager: LinearLayoutManager
     var isScrolling = false
-    var noInternet = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +56,6 @@ class UserFragment : Fragment() {
                         progressbarView(false)
                         serverErrorView(false)
                         noInternetView(false)
-                        noInternet = response.isErrorNext
                         response.data?.let { userList ->
                             userAdapter.submitList(userList)
                             userAdapter.notifyItemChanged(userList.lastIndex)
@@ -67,25 +65,20 @@ class UserFragment : Fragment() {
                         progressbarView(true)
                         noInternetView(false)
                         serverErrorView(false)
-                        noInternet = false
                     }
                     is Results.Error -> {
                         userAdapter.submitList(emptyList())
                         progressbarView(false)
                         noInternetView(false)
                         serverErrorView(true)
-                        noInternet = false
                         response.message?.let { message ->
                             Log.e("UserFragment", "An error occured: $message")
                         }
                     }
                     Results.NoInternet -> {
-                        noInternet = true
-                        if (response.data.isNullOrEmpty()) {
                             progressbarView(false)
                             serverErrorView(false)
                             noInternetView(true)
-                        }
                     }
                 }
             }
@@ -101,7 +94,7 @@ class UserFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        userAdapter = UserAdapter(this) {
+        userAdapter = UserAdapter(userViewModel) {
             userViewModel.getAllUsers()
         }
         layoutManager = LinearLayoutManager(activity)
