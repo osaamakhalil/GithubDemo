@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.databinding.ItemUserBinding
 import com.example.githubdemo.databinding.NetworkStatusBinding
-import com.example.githubdemo.users.*
+import com.example.githubdemo.users.home.UserViewModel
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Constant.Companion.USER_LIST_VIEW
 import com.example.githubdemo.utils.Constant.Companion.VIEW_TYPE_LOADING

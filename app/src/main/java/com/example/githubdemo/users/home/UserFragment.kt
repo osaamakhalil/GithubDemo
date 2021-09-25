@@ -1,4 +1,4 @@
-package com.example.githubdemo.users
+package com.example.githubdemo.users.home
 
 import android.os.Bundle
 import android.util.Log

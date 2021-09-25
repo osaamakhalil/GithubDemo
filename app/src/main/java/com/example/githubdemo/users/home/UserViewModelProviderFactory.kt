@@ -1,6 +1,5 @@
-package com.example.githubdemo.users
+package com.example.githubdemo.users.home
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.githubdemo.api.NetworkUtil
