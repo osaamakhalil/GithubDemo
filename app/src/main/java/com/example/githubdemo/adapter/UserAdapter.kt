@@ -18,6 +18,7 @@ import com.example.githubdemo.viewholder.showLoadingView
 
 class UserAdapter(
     private val userViewModel: UserViewModel,
+    private val onItemClicked:()-> Unit,
     private val onTryAgainClick: () -> Unit
 ) :
     ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallBack()) {
@@ -27,7 +28,7 @@ class UserAdapter(
         if (viewType == USER_LIST_VIEW) {
             val binding: ItemUserBinding =
                 ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return UserViewHolder(binding)
+            return UserViewHolder(binding,onItemClicked)
         } else {
             val pageProgressBarBinding: NetworkStatusBinding =
                 NetworkStatusBinding.inflate(LayoutInflater.from(parent.context), parent, false)

@@ -3,7 +3,7 @@ package com.example.githubdemo.viewholder
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.databinding.NetworkStatusBinding
-import com.example.githubdemo.users.UserViewModel
+import com.example.githubdemo.users.home.UserViewModel
 
 class NetworkStatusViewHolder(
     binding: NetworkStatusBinding,
@@ -18,7 +18,6 @@ class NetworkStatusViewHolder(
             onTryAgainClick()
         }
     }
-
 }
 
 fun showLoadingView(

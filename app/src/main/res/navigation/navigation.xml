@@ -7,6 +7,14 @@
 
     <fragment
         android:id="@+id/userFragment"
-        android:name="com.example.githubdemo.users.UserFragment"
-        android:label="UserFragment" />
+        android:name="com.example.githubdemo.users.home.UserFragment"
+        android:label="UserFragment" >
+        <action
+            android:id="@+id/userFragment_to_userDetails"
+            app:destination="@id/userDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDetails"
+        android:name="com.example.githubdemo.users.details.UserDetailsFragment"
+        android:label="UserDetails" />
 </navigation>

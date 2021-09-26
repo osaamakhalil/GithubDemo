@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
@@ -76,9 +77,9 @@ class UserFragment : Fragment() {
                         }
                     }
                     Results.NoInternet -> {
-                            progressbarView(false)
-                            serverErrorView(false)
-                            noInternetView(true)
+                        progressbarView(false)
+                        serverErrorView(false)
+                        noInternetView(true)
                     }
                 }
             }
@@ -94,9 +95,11 @@ class UserFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        userAdapter = UserAdapter(userViewModel) {
-            userViewModel.getAllUsers()
-        }
+        userAdapter = UserAdapter(
+            userViewModel = userViewModel,
+            onItemClicked = { navigateToDetailsScreen() },
+            onTryAgainClick = { userViewModel.getAllUsers() }
+        )
         layoutManager = LinearLayoutManager(activity)
         binding.apply {
             userRecycler.layoutManager = layoutManager
@@ -104,6 +107,10 @@ class UserFragment : Fragment() {
             userRecycler.addOnScrollListener(this@UserFragment.scrollListener)
         }
 
+    }
+
+    private fun navigateToDetailsScreen() {
+        findNavController().navigate(R.id.userFragment_to_userDetails)
     }
 
     /*

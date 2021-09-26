@@ -3,7 +3,7 @@
 <data>
     <variable
         name="userFragment"
-        type="com.example.githubdemo.users.UserFragment" />
+        type="com.example.githubdemo.users.home.UserFragment" />
 </data>
     <LinearLayout
         android:id="@+id/page_progress"
