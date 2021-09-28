@@ -18,7 +18,7 @@ import com.example.githubdemo.viewholder.showLoadingView
 
 class UserAdapter(
     private val userViewModel: UserViewModel,
-    private val onItemClicked:()-> Unit,
+    private val onItemClicked:(UserResponse)-> Unit,
     private val onTryAgainClick: () -> Unit
 ) :
     ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallBack()) {
