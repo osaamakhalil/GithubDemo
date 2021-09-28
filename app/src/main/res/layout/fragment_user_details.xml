@@ -7,15 +7,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".users.details.UserDetailsFragment">
+        tools:context=".users.detail.ui.UserDetailsFragment">
 
         <ImageView
             android:id="@+id/userImage"
             android:contentDescription="@string/user_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginTop="16dp"
-            android:src="@mipmap/ic_launcher_round"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -26,7 +25,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="OsamaKhalil"
             android:textColor="@android:color/black"
             android:textSize="@dimen/regular_text_size"
             app:layout_constraintEnd_toEndOf="parent"
@@ -35,12 +33,13 @@
             tools:text="Osama Khalil" />
 
         <TextView
-            android:id="@+id/FollowersText"
+            android:id="@+id/followersText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:text="@string/followers"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.7"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,8 +49,9 @@
             android:id="@+id/followingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="32dp"
+            android:visibility="gone"
             android:text="@string/following"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.3"
@@ -78,15 +78,15 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tab_layout"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/followingCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="222"
             android:textColor="@color/black"
+            tools:text="222"
             app:layout_constraintEnd_toEndOf="@+id/followingText"
             app:layout_constraintStart_toStartOf="@+id/followingText"
             app:layout_constraintTop_toBottomOf="@+id/followingText" />
@@ -96,11 +96,80 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="120"
             android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="@+id/FollowersText"
-            app:layout_constraintStart_toStartOf="@+id/FollowersText"
-            app:layout_constraintTop_toBottomOf="@+id/FollowersText" />
+            tools:text="333"
+            app:layout_constraintEnd_toEndOf="@+id/followersText"
+            app:layout_constraintStart_toStartOf="@+id/followersText"
+            app:layout_constraintTop_toBottomOf="@+id/followersText" />
+
+        <TextView
+            android:id="@+id/realName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/followersText"
+            app:layout_constraintEnd_toEndOf="@+id/userName"
+            app:layout_constraintStart_toStartOf="@+id/userName"
+            app:layout_constraintTop_toBottomOf="@+id/userName"
+            tools:text="osama abdelfatah" />
+
+        <ProgressBar
+            android:id="@+id/detailsProgress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/tab_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/noInternetConnectionDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/no_internet_connection"
+            android:textAllCaps="true"
+            app:layout_constraintBottom_toTopOf="@+id/tryAgainDetails"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <Button
+            android:id="@+id/tryAgainDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:text="@string/try_again"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/tab_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.83" />
+
+        <ImageView
+            android:id="@+id/ivServerErrorDetails"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="42dp"
+            android:contentDescription="@string/server_error"
+            android:src="@drawable/ic_server_error"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tryAgainDetails"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/ic_server_error" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
