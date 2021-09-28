@@ -5,7 +5,7 @@ import com.bumptech.glide.Glide
 import com.example.githubdemo.databinding.ItemUserBinding
 import com.example.githubdemo.users.model.UserResponse
 
-class UserViewHolder(private val binding: ItemUserBinding,private val onItemCLicked:()->Unit) :
+class UserViewHolder(private val binding: ItemUserBinding,private val onItemCLicked:(UserResponse)->Unit) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(user: UserResponse) {
         binding.apply {
@@ -15,7 +15,7 @@ class UserViewHolder(private val binding: ItemUserBinding,private val onItemCLic
                 .circleCrop()
                 .into(ivUserAvatar)
             userItem.setOnClickListener {
-                onItemCLicked()
+                onItemCLicked(user)
             }
         }
     }

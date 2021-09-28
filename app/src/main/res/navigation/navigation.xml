@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
     app:startDestination="@id/userFragment">
 
@@ -10,11 +9,15 @@
         android:name="com.example.githubdemo.users.home.UserFragment"
         android:label="UserFragment" >
         <action
-            android:id="@+id/userFragment_to_userDetails"
+            android:id="@+id/toUserDetails"
             app:destination="@id/userDetails" />
     </fragment>
     <fragment
         android:id="@+id/userDetails"
-        android:name="com.example.githubdemo.users.details.UserDetailsFragment"
-        android:label="UserDetails" />
+        android:name="com.example.githubdemo.users.detail.ui.UserDetailsFragment"
+        android:label="UserDetails" >
+        <argument
+            android:name="userResponse"
+            app:argType="com.example.githubdemo.users.model.UserResponse" />
+    </fragment>
 </navigation>

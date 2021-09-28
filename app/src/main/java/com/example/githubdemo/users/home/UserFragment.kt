@@ -18,8 +18,10 @@ import com.example.githubdemo.adapter.UserAdapter
 import com.example.githubdemo.api.NetworkUtil
 import com.example.githubdemo.databinding.FragmentUserBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
+import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Results
 import com.google.android.material.snackbar.Snackbar
+
 
 
 class UserFragment : Fragment() {
@@ -54,6 +56,7 @@ class UserFragment : Fragment() {
             usersResults?.let { response ->
                 when (response) {
                     is Results.Success -> {
+                        tryAgainView(false)
                         progressbarView(false)
                         serverErrorView(false)
                         noInternetView(false)
@@ -63,12 +66,14 @@ class UserFragment : Fragment() {
                         }
                     }
                     Results.Loading -> {
+                        tryAgainView(false)
                         progressbarView(true)
                         noInternetView(false)
                         serverErrorView(false)
                     }
                     is Results.Error -> {
                         userAdapter.submitList(emptyList())
+                        tryAgainView(true)
                         progressbarView(false)
                         noInternetView(false)
                         serverErrorView(true)
@@ -77,6 +82,7 @@ class UserFragment : Fragment() {
                         }
                     }
                     Results.NoInternet -> {
+                        tryAgainView(true)
                         progressbarView(false)
                         serverErrorView(false)
                         noInternetView(true)
@@ -97,7 +103,10 @@ class UserFragment : Fragment() {
     private fun setupRecyclerView() {
         userAdapter = UserAdapter(
             userViewModel = userViewModel,
-            onItemClicked = { navigateToDetailsScreen() },
+            onItemClicked =
+            {
+                navigateToDetailsScreen(it)
+            },
             onTryAgainClick = { userViewModel.getAllUsers() }
         )
         layoutManager = LinearLayoutManager(activity)
@@ -109,8 +118,8 @@ class UserFragment : Fragment() {
 
     }
 
-    private fun navigateToDetailsScreen() {
-        findNavController().navigate(R.id.userFragment_to_userDetails)
+    private fun navigateToDetailsScreen(user: UserResponse) {
+        findNavController().navigate(UserFragmentDirections.toUserDetails(user))
     }
 
     /*
@@ -161,7 +170,6 @@ class UserFragment : Fragment() {
     *  */
     private fun noInternetView(showViews: Boolean) {
         binding.tvNoInternet.isVisible = showViews
-        binding.btTryAgain.isVisible = showViews
     }
 
     private fun progressbarView(showViews: Boolean) {
@@ -170,6 +178,8 @@ class UserFragment : Fragment() {
 
     private fun serverErrorView(showViews: Boolean) {
         binding.ivServerError.isVisible = showViews
+    }
+    private fun tryAgainView(showViews: Boolean) {
         binding.btTryAgain.isVisible = showViews
     }
 }
