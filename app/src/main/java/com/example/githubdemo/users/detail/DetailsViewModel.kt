@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.githubdemo.api.NetworkUtil
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.model.UserDetails
+import com.example.githubdemo.users.model.UserRepo
 import com.example.githubdemo.utils.Results
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +23,13 @@ class DetailsViewModel(
     val usersDetailsStatus: LiveData<Results<UserDetails>>
         get() = _usersDetailsStatus
 
-    fun getUserFollowCount(name: String) {
+    private val _usersRepoStatus = MutableLiveData<Results<List<UserRepo>>>()
+    val usersRepoStatus: LiveData<Results<List<UserRepo>>>
+        get() = _usersRepoStatus
+
+
+
+    fun getUserDetails(name: String) {
         if (networkUtil.hasInternetConnection()) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
@@ -39,7 +46,24 @@ class DetailsViewModel(
         }
     }
 
-
+    fun getUserRepo(name: String) {
+        if (networkUtil.hasInternetConnection()) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    _usersRepoStatus.postValue(Results.Loading)
+                    val userRepos = userRepository.getUserRepo(name)
+                    if (userRepos.isNotEmpty()) {
+                        _usersRepoStatus.postValue(Results.Success(userRepos))
+                    }
+                } catch (t: Throwable) {
+                    Log.e("userViewModel", "${t.message}")
+                    _usersRepoStatus.postValue(Results.Error(t.message))
+                }
+            }
+        } else {
+            _usersRepoStatus.postValue(Results.NoInternet)
+        }
+    }
 
 
 }
