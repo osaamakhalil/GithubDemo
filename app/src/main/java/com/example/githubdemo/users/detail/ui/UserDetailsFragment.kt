@@ -51,7 +51,7 @@ class UserDetailsFragment : Fragment() {
 
         val userName = args.userResponse.name
 
-        detailsViewModel.getUserFollowCount(userName)
+        detailsViewModel.getUserDetails(userName)
 
         detailsViewModel.usersDetailsStatus.observe(viewLifecycleOwner) { UserFollowCount ->
             UserFollowCount?.let { response ->
@@ -85,7 +85,7 @@ class UserDetailsFragment : Fragment() {
             }
         }
         tryAgain(userName)
-        setupDetailPagerView()
+        setupDetailPagerView(userName)
     }
 
 
@@ -108,20 +108,15 @@ class UserDetailsFragment : Fragment() {
 
     private fun tryAgain(userName: String) {
         binding.tryAgainDetails.setOnClickListener {
-            detailsViewModel.getUserFollowCount(userName)
+            detailsViewModel.getUserDetails(userName)
         }
     }
 
-    private fun setupDetailPagerView() {
-        val fragmentPagerList = arrayListOf(
-            RepositoryFragment(),
-            FollowingFragment(),
-            FollowersFragment()
-        )
+    private fun setupDetailPagerView(userName: String) {
         val adapter = DetailsPagerAdapter(
-            fragmentPagerList,
             requireActivity().supportFragmentManager,
-            lifecycle
+            lifecycle,
+            userName
         )
         val pager = binding.pager
         val tabLayout = binding.tabLayout

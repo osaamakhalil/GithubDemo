@@ -4,20 +4,26 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.githubdemo.users.detail.ui.FollowersFragment
+import com.example.githubdemo.users.detail.ui.FollowingFragment
+import com.example.githubdemo.users.detail.ui.RepositoryFragment
 
 class DetailsPagerAdapter(
-    list: ArrayList<Fragment>,
     fm: FragmentManager,
-    lifecycle: Lifecycle
+    lifecycle: Lifecycle,
+    private val userName: String
 ) : FragmentStateAdapter(fm, lifecycle) {
 
-    private val fragmentList = list
-
     override fun getItemCount(): Int {
-        return fragmentList.size
+        return 3
     }
 
     override fun createFragment(position: Int): Fragment {
-        return fragmentList[position]
+        return when (position) {
+            0 -> RepositoryFragment(userName)
+            1 -> FollowingFragment()
+            2 -> FollowersFragment()
+            else -> RepositoryFragment(userName)
+        }
     }
 }
