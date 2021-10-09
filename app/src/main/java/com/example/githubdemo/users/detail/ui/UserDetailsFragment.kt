@@ -85,7 +85,7 @@ class UserDetailsFragment : Fragment() {
             }
         }
         tryAgain(userName)
-        setupDetailPagerView(userName)
+        setupDetailPagerView()
     }
 
 
@@ -112,11 +112,11 @@ class UserDetailsFragment : Fragment() {
         }
     }
 
-    private fun setupDetailPagerView(userName: String) {
+    private fun setupDetailPagerView() {
         val adapter = DetailsPagerAdapter(
             requireActivity().supportFragmentManager,
             lifecycle,
-            userName
+            args.userResponse.name
         )
         val pager = binding.pager
         val tabLayout = binding.tabLayout

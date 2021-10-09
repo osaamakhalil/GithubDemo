@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.githubdemo.R
@@ -15,13 +16,13 @@ import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.detail.DetailsViewModel
 import com.example.githubdemo.users.detail.DetailsViewModelProviderFactory
 import com.example.githubdemo.utils.Results
+import com.example.githubdemo.utils.Constant.Companion.USER_NAME_KEY
 
-class RepositoryFragment(private val userName:String) : Fragment() {
+class RepositoryFragment() : Fragment() {
     private var _binding: FragmentRepositoryBinding? = null
     private val binding get() = _binding!!
-    lateinit var repoAdapter: UserRepoAdapter
+    private lateinit var repoAdapter: UserRepoAdapter
     private lateinit var detailsViewModel: DetailsViewModel
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,18 +42,28 @@ class RepositoryFragment(private val userName:String) : Fragment() {
         val viewModelFactory = DetailsViewModelProviderFactory(repository, networkUtil)
         detailsViewModel =
             ViewModelProvider(this, viewModelFactory).get(DetailsViewModel::class.java)
-        detailsViewModel.getUserRepo(userName)
+        val bundle = this.arguments
+        val userName = bundle?.getString(USER_NAME_KEY)
+        if (userName != null) {
+            detailsViewModel.getUserRepo(userName)
+        }
+
+
 
         detailsViewModel.usersRepoStatus.observe(viewLifecycleOwner) { userRepo ->
             userRepo?.let { response ->
                 when (response) {
                     is Results.Error -> {
+                        progressbarView(false)
                     }
                     Results.Loading -> {
+                        progressbarView(true)
                     }
                     Results.NoInternet -> {
+                        progressbarView(false)
                     }
                     is Results.Success -> {
+                        progressbarView(false)
                         repoAdapter.submitList(response.data)
                     }
                 }
@@ -65,6 +76,10 @@ class RepositoryFragment(private val userName:String) : Fragment() {
     private fun setUpRecyclerView() {
         repoAdapter = UserRepoAdapter()
         binding.repoRecycler.adapter = repoAdapter
+    }
+
+    private fun progressbarView(showViews: Boolean) {
+        binding.repoProgress.isVisible = showViews
     }
 
 }
