@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.githubdemo.api.NetworkUtil
 import com.example.githubdemo.databinding.ItemUserBinding
 import com.example.githubdemo.databinding.NetworkStatusBinding
 import com.example.githubdemo.users.home.UserViewModel
@@ -17,8 +18,8 @@ import com.example.githubdemo.viewholder.showLoadingView
 
 
 class UserAdapter(
-    private val userViewModel: UserViewModel,
-    private val onItemClicked:(UserResponse)-> Unit,
+    private val networkUtil: NetworkUtil,
+    private val onItemClicked: (UserResponse) -> Unit,
     private val onTryAgainClick: () -> Unit
 ) :
     ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallBack()) {
@@ -28,11 +29,15 @@ class UserAdapter(
         if (viewType == USER_LIST_VIEW) {
             val binding: ItemUserBinding =
                 ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return UserViewHolder(binding,onItemClicked)
+            return UserViewHolder(binding, onItemClicked)
         } else {
             val pageProgressBarBinding: NetworkStatusBinding =
                 NetworkStatusBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return NetworkStatusViewHolder(pageProgressBarBinding, onTryAgainClick)
+            return NetworkStatusViewHolder(
+                pageProgressBarBinding,
+                networkUtil,
+                onTryAgainClick
+            )
         }
 
     }
@@ -41,7 +46,7 @@ class UserAdapter(
         if (viewHolder is UserViewHolder) {
             populateItemRows(viewHolder, position)
         } else if (viewHolder is NetworkStatusViewHolder) {
-            showLoadingView(viewHolder, position, userViewModel)
+            showLoadingView(viewHolder)
         }
     }
 

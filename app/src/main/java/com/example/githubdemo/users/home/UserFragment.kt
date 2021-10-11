@@ -95,14 +95,14 @@ class UserFragment : Fragment() {
                 Snackbar.make(view, "NO INTERNET CONNECTION !!", Snackbar.LENGTH_SHORT).show()
             }
         })
+        setupRecyclerView(networkUtil)
         swipeRefresh()
         tryAgain()
-        setupRecyclerView()
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView(networkUtil: NetworkUtil) {
         userAdapter = UserAdapter(
-            userViewModel = userViewModel,
+            networkUtil = networkUtil,
             onItemClicked =
             {
                 navigateToDetailsScreen(it)
