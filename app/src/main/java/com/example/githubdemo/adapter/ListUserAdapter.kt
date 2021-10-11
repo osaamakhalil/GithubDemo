@@ -17,7 +17,7 @@ import com.example.githubdemo.viewholder.UserViewHolder
 import com.example.githubdemo.viewholder.showLoadingView
 
 
-class UserAdapter(
+class ListUserAdapter(
     private val networkUtil: NetworkUtil,
     private val onItemClicked: (UserResponse) -> Unit,
     private val onTryAgainClick: () -> Unit
