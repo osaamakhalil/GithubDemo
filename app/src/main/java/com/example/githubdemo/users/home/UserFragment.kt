@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
-import com.example.githubdemo.adapter.UserAdapter
+import com.example.githubdemo.adapter.ListUserAdapter
 import com.example.githubdemo.api.NetworkUtil
 import com.example.githubdemo.databinding.FragmentUserBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
@@ -23,19 +23,17 @@ import com.example.githubdemo.utils.Results
 import com.google.android.material.snackbar.Snackbar
 
 
-
 class UserFragment : Fragment() {
 
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
-    private lateinit var userAdapter: UserAdapter
+    private lateinit var listUserAdapter: ListUserAdapter
     private lateinit var userViewModel: UserViewModel
-    private lateinit var layoutManager: LinearLayoutManager
-    var isScrolling = false
+    private var isScrolling = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false)
@@ -52,6 +50,14 @@ class UserFragment : Fragment() {
         userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java)
 
 
+        userListResultsHandling()
+        snackBarView(view)
+        setupRecyclerView(networkUtil)
+        swipeRefresh()
+        tryAgainButton()
+    }
+
+    private fun userListResultsHandling() {
         userViewModel.usersStatus.observe(viewLifecycleOwner, { usersResults ->
             usersResults?.let { response ->
                 when (response) {
@@ -61,8 +67,8 @@ class UserFragment : Fragment() {
                         serverErrorView(false)
                         noInternetView(false)
                         response.data?.let { userList ->
-                            userAdapter.submitList(userList)
-                            userAdapter.notifyItemChanged(userList.lastIndex)
+                            listUserAdapter.submitList(userList)
+                            listUserAdapter.notifyItemChanged(userList.lastIndex)
                         }
                     }
                     Results.Loading -> {
@@ -72,7 +78,7 @@ class UserFragment : Fragment() {
                         serverErrorView(false)
                     }
                     is Results.Error -> {
-                        userAdapter.submitList(emptyList())
+                        listUserAdapter.submitList(emptyList())
                         tryAgainView(true)
                         progressbarView(false)
                         noInternetView(false)
@@ -90,18 +96,18 @@ class UserFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun snackBarView(view: View) {
         userViewModel.showSnackBar.observe(viewLifecycleOwner, { showSnackBar ->
             if (showSnackBar == true) {
                 Snackbar.make(view, "NO INTERNET CONNECTION !!", Snackbar.LENGTH_SHORT).show()
             }
         })
-        setupRecyclerView(networkUtil)
-        swipeRefresh()
-        tryAgain()
     }
 
     private fun setupRecyclerView(networkUtil: NetworkUtil) {
-        userAdapter = UserAdapter(
+        listUserAdapter = ListUserAdapter(
             networkUtil = networkUtil,
             onItemClicked =
             {
@@ -109,10 +115,10 @@ class UserFragment : Fragment() {
             },
             onTryAgainClick = { userViewModel.getAllUsers() }
         )
-        layoutManager = LinearLayoutManager(activity)
+        //   layoutManager = LinearLayoutManager(activity)
         binding.apply {
-            userRecycler.layoutManager = layoutManager
-            userRecycler.adapter = userAdapter
+            //    userRecycler.layoutManager = layoutManager
+            userRecycler.adapter = listUserAdapter
             userRecycler.addOnScrollListener(this@UserFragment.scrollListener)
         }
 
@@ -159,7 +165,7 @@ class UserFragment : Fragment() {
         }
     }
 
-    private fun tryAgain() {
+    private fun tryAgainButton() {
         binding.btTryAgain.setOnClickListener {
             userViewModel.getAllUsers()
         }
