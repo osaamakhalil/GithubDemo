@@ -15,8 +15,8 @@ class UserRemoteDataSource {
         return RetrofitBuilder.userApiService.getUsersDetails(userName)
     }
 
-    suspend fun getUserRepo(userName: String): List<UserRepo> {
-        return RetrofitBuilder.userApiService.getUserRepo(userName)
+    suspend fun getUserRepo(userName: String, per_page: Int): List<UserRepo> {
+        return RetrofitBuilder.userApiService.getUserRepo(userName, per_page)
     }
 
     suspend fun getUserFollowing(userName: String, page: Int): MutableList<UserResponse> {

@@ -22,6 +22,7 @@ interface UserApiService {
     @GET("/users/{username}/repos")
     suspend fun getUserRepo(
         @Path("username") userName: String,
+        @Query("per_page") per_page: Int
     ) : List<UserRepo>
 
     @GET("/users/{username}/following")

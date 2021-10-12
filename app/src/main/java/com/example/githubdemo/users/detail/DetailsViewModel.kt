@@ -68,7 +68,7 @@ class DetailsViewModel(
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     _usersRepoStatus.postValue(Results.Loading)
-                    val userRepos = userRepository.getUserRepo(name)
+                    val userRepos = userRepository.getUserRepo(name,50)
                     if (userRepos.isNotEmpty()) {
                         _usersRepoStatus.postValue(Results.Success(userRepos))
                     }

@@ -16,8 +16,8 @@ class UserRepositoryImpl : UserRepository {
         return userRemoteDataSource.getUsersDetails(userName)
     }
 
-    override suspend fun getUserRepo(userName: String): List<UserRepo> {
-        return userRemoteDataSource.getUserRepo(userName)
+    override suspend fun getUserRepo(userName: String, per_page: Int): List<UserRepo> {
+        return userRemoteDataSource.getUserRepo(userName, per_page)
     }
 
     override suspend fun getUserFollowing(userName: String, page: Int): MutableList<UserResponse> {
