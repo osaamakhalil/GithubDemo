@@ -11,22 +11,66 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_margin="8dp"
+            android:layout_margin="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/tvUserRepo"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                tools:text="github demo" />
+                android:layout_height="match_parent"
+                >
 
+                <TextView
+                    android:id="@+id/tv_user_repo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:text="github demo" />
+
+                <ImageView
+                    android:contentDescription="@string/star_icon"
+                    android:id="@+id/repo_stars"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_star_border_24"
+                     />
+
+                <TextView
+                    android:id="@+id/tv_stars_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toEndOf="@+id/repo_stars"
+                    tools:text="14" />
+
+                <ImageView
+                    android:id="@+id/repo_fork"
+                    android:contentDescription="@string/fork_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@+id/tv_stars_count"
+                    android:src="@drawable/ic_device_hub_24"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_fork_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toEndOf="@+id/repo_fork"
+
+                    tools:text="12" />
+
+
+            </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

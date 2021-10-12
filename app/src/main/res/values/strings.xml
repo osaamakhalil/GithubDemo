@@ -10,4 +10,6 @@
     <string name="followers">Followers</string>
     <string name="user_avatar">userAvatar</string>
     <string name="right_arrow">right_arrow</string>
+    <string name="star_icon">star_icon</string>
+    <string name="fork_icon">fork_icon</string>
 </resources>
