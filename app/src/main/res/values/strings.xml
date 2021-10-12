@@ -9,4 +9,5 @@
     <string name="following">Following</string>
     <string name="followers">Followers</string>
     <string name="user_avatar">userAvatar</string>
+    <string name="right_arrow">right_arrow</string>
 </resources>
