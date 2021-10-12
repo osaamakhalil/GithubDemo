@@ -26,7 +26,9 @@ class DetailsPagerAdapter(
             0 -> RepositoryFragment().apply {
                 arguments = bundleOf(USER_NAME_KEY to userName)
             }
-            1 -> FollowingFragment()
+            1 -> FollowingFragment().apply {
+                arguments = bundleOf(USER_NAME_KEY to userName)
+            }
             2 -> FollowersFragment()
             else -> RepositoryFragment()
         }
