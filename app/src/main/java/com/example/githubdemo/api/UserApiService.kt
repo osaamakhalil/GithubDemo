@@ -24,5 +24,11 @@ interface UserApiService {
         @Path("username") userName: String,
     ) : List<UserRepo>
 
+    @GET("/users/{username}/following")
+    suspend fun getUserFollowing(
+        @Path("username") userName: String,
+        @Query("page") page: Int
+    ) : MutableList<UserResponse>
+
 
 }

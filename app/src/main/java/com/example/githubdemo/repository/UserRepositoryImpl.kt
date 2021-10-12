@@ -8,9 +8,10 @@ import com.example.githubdemo.users.model.UserResponse
 class UserRepositoryImpl : UserRepository {
     private val userRemoteDataSource: UserRemoteDataSource = UserRemoteDataSource()
 
-    override suspend fun getUsers(page:Int): List<UserResponse> {
+    override suspend fun getUsers(page: Int): List<UserResponse> {
         return userRemoteDataSource.getUsers(page)
     }
+
     override suspend fun getUsersDetails(userName: String): UserDetails {
         return userRemoteDataSource.getUsersDetails(userName)
     }
@@ -19,5 +20,8 @@ class UserRepositoryImpl : UserRepository {
         return userRemoteDataSource.getUserRepo(userName)
     }
 
+    override suspend fun getUserFollowing(userName: String,page: Int): MutableList<UserResponse> {
+       return userRemoteDataSource.getUserFollowing(userName,page)
+    }
 
 }
