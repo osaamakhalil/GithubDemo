@@ -5,10 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.githubdemo.api.NetworkUtil
+import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.ItemUserBinding
 import com.example.githubdemo.databinding.NetworkStatusBinding
-import com.example.githubdemo.users.home.UserViewModel
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Constant.Companion.USER_LIST_VIEW
 import com.example.githubdemo.utils.Constant.Companion.VIEW_TYPE_LOADING
@@ -21,8 +20,8 @@ class ListUserAdapter(
     private val networkUtil: NetworkUtil,
     private val onItemClicked: (UserResponse) -> Unit,
     private val onTryAgainClick: () -> Unit
-) :
-    ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallBack()) {
+) : ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallBack()) {
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -55,7 +54,7 @@ class ListUserAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - 1)
+        return if (position == itemCount - 1 && !networkUtil.lastPage)
             VIEW_TYPE_LOADING
         else
             USER_LIST_VIEW
