@@ -19,9 +19,8 @@ import com.example.githubdemo.viewholder.showLoadingView
 class ListUserAdapter(
     private val networkUtil: NetworkUtil,
     private val onItemClicked: (UserResponse) -> Unit,
-    private val onTryAgainClick: () -> Unit
+    private val onTryAgainClick: () -> Unit,
 ) : ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallBack()) {
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -54,7 +53,7 @@ class ListUserAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - 1 && !networkUtil.lastPage)
+        return if (position == itemCount - 1 && !networkUtil.lastPage && itemCount >= 6)
             VIEW_TYPE_LOADING
         else
             USER_LIST_VIEW
