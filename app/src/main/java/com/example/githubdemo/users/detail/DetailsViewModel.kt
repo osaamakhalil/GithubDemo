@@ -20,7 +20,8 @@ class DetailsViewModel(
 ) : ViewModel(
 ) {
     private var followPages = 1
-    private var numberOfFollow = 0
+    private var numberOfFollowing = 0
+    var numberOfFollower = 0
 
     private val _usersDetailsStatus = MutableLiveData<Results<UserDetails>>()
     val usersDetailsStatus: LiveData<Results<UserDetails>>
@@ -42,6 +43,7 @@ class DetailsViewModel(
     private var userPresenterList: MutableList<UserResponse>? = null
 
 
+    //make this request to get number of followers/following
     fun getUserDetails(name: String) {
         if (networkUtil.hasInternetConnection()) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -49,7 +51,8 @@ class DetailsViewModel(
                     _usersDetailsStatus.postValue(Results.Loading)
                     val followCount = userRepository.getUsersDetails(name)
                     _usersDetailsStatus.postValue(Results.Success(followCount))
-                    numberOfFollow = followCount.following
+                    numberOfFollowing = followCount.following
+                    numberOfFollower = followCount.followers
                 } catch (t: Throwable) {
                     Log.e("DetailsViewModel", "${t.message}")
                     _usersDetailsStatus.postValue(Results.Error(t.message))
@@ -79,9 +82,10 @@ class DetailsViewModel(
         }
     }
 
+    //to get list of following
     fun getUserFollowing(userName: String) {
         //check if in the last page
-        if (numberOfFollow != userPresenterList?.size) {
+        if (numberOfFollowing != userPresenterList?.size) {
             networkUtil.isLastPage(false)
             if (networkUtil.hasInternetConnection()) {
                 viewModelScope.launch(Dispatchers.IO) {
@@ -114,9 +118,10 @@ class DetailsViewModel(
         }
     }
 
+    //to get list of followers
     fun getUserFollowers(userName: String) {
         //check if in the last page
-        if (numberOfFollow != userPresenterList?.size) {
+        if (numberOfFollower != userPresenterList?.size) {
             networkUtil.isLastPage(false)
             if (networkUtil.hasInternetConnection()) {
                 viewModelScope.launch(Dispatchers.IO) {
