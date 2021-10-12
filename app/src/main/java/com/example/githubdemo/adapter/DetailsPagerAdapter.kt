@@ -13,7 +13,7 @@ import com.example.githubdemo.utils.Constant.Companion.USER_NAME_KEY
 class DetailsPagerAdapter(
     fm: FragmentManager,
     lifecycle: Lifecycle,
-     val userName: String
+    val userName: String,
 ) : FragmentStateAdapter(fm, lifecycle) {
 
     override fun getItemCount(): Int {
@@ -29,7 +29,9 @@ class DetailsPagerAdapter(
             1 -> FollowingFragment().apply {
                 arguments = bundleOf(USER_NAME_KEY to userName)
             }
-            2 -> FollowersFragment()
+            2 -> FollowersFragment().apply {
+                arguments = bundleOf(USER_NAME_KEY to userName)
+            }
             else -> RepositoryFragment()
         }
     }
