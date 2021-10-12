@@ -12,7 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.DetailsPagerAdapter
-import com.example.githubdemo.api.NetworkUtil
+import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.FragmentUserDetailsBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.detail.DetailsViewModel

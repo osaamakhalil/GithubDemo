@@ -2,7 +2,7 @@ package com.example.githubdemo.users.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.githubdemo.api.NetworkUtil
+import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.repository.UserRepositoryImpl
 import java.lang.IllegalArgumentException
 

@@ -2,7 +2,7 @@ package com.example.githubdemo.viewholder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.example.githubdemo.api.NetworkUtil
+import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.NetworkStatusBinding
 
 class NetworkStatusViewHolder(

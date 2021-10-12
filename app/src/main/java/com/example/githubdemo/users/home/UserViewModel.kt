@@ -2,7 +2,7 @@ package com.example.githubdemo.users.home
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.githubdemo.api.NetworkUtil
+import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Results

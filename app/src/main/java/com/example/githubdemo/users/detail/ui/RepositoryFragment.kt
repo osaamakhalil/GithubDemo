@@ -10,7 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.UserRepoAdapter
-import com.example.githubdemo.api.NetworkUtil
+import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.FragmentRepositoryBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.detail.DetailsViewModel
