@@ -102,6 +102,8 @@ class UserDetailsFragment : Fragment() {
             userName.text = userResponse.name
             followersText.visibility = View.VISIBLE
             followingText.visibility = View.VISIBLE
+            blogIcon.visibility = View.VISIBLE
+            followIcon.visibility = View.VISIBLE
 
             if (response.data?.blog == "") {
                 blogIcon.visibility = View.GONE

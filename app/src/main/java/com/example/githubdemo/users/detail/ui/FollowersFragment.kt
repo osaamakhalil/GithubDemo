@@ -60,6 +60,7 @@ class FollowersFragment : Fragment() {
 
         userFollowersListResultsHandling()
         setUpRecyclerView(networkUtil)
+        tryAgainButton()
     }
 
     private fun userFollowersListResultsHandling() {
@@ -67,21 +68,38 @@ class FollowersFragment : Fragment() {
             userFollowing?.let { response ->
                 when (response) {
                     is Results.Error -> {
+                        serverErrorView(true)
+                        tryAgainView(true)
+                        noInternetView(false)
                         progressBarView(false)
                     }
                     Results.Loading -> {
                         progressBarView(true)
+                        noInternetView(false)
+                        tryAgainView(false)
+                        serverErrorView(false)
                     }
                     Results.NoInternet -> {
+                        noInternetView(true)
+                        tryAgainView(true)
                         progressBarView(false)
-
+                        serverErrorView(false)
                     }
                     is Results.Success -> {
+                        serverErrorView(false)
+                        noInternetView(false)
+                        tryAgainView(false)
                         progressBarView(false)
                         userFollowingAdapter.submitList(response.data)
                     }
                 }
             }
+        }
+    }
+
+    private fun tryAgainButton() {
+        binding.btFollowersTryAgain.setOnClickListener {
+            detailsViewModel.getUserFollowers(userName)
         }
     }
 
@@ -134,7 +152,22 @@ class FollowersFragment : Fragment() {
         }
     }
 
+    /*
+     *handle views visibility
+     *  */
     private fun progressBarView(showView: Boolean) {
         binding.followersProgress.isVisible = showView
+    }
+
+    private fun noInternetView(showViews: Boolean) {
+        binding.tvFollowersNoInternetConnection.isVisible = showViews
+    }
+
+    private fun serverErrorView(showViews: Boolean) {
+        binding.ivFollowersServerError.isVisible = showViews
+    }
+
+    private fun tryAgainView(showViews: Boolean) {
+        binding.btFollowersTryAgain.isVisible = showViews
     }
 }
