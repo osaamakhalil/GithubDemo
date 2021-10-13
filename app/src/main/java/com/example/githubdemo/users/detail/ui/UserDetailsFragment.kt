@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.githubdemo.R
@@ -27,11 +28,11 @@ class UserDetailsFragment : Fragment() {
     private val binding get() = _binding!!
     private val args: UserDetailsFragmentArgs by navArgs()
     private lateinit var detailsViewModel: DetailsViewModel
-
+    private lateinit var usersName: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_user_details, container, false)
@@ -49,9 +50,9 @@ class UserDetailsFragment : Fragment() {
         detailsViewModel =
             ViewModelProvider(this, viewModelFactory).get(DetailsViewModel::class.java)
 
-        val userName = args.userResponse.name
+        usersName = args.userResponse.name
 
-        detailsViewModel.getUserDetails(userName)
+        detailsViewModel.getUserDetails(usersName)
 
         detailsViewModel.usersDetailsStatus.observe(viewLifecycleOwner) { UserFollowCount ->
             UserFollowCount?.let { response ->
@@ -84,7 +85,8 @@ class UserDetailsFragment : Fragment() {
                 }
             }
         }
-        tryAgain(userName)
+        navigateToFollowScreen()
+        tryAgain(usersName)
         setupDetailPagerView()
     }
 
@@ -95,14 +97,33 @@ class UserDetailsFragment : Fragment() {
             realName.text = response.data?.realName
             followersCount.text = response.data?.followers.toString()
             followingCount.text = response.data?.following.toString()
+            userBio.text = response.data?.bio
+            userBlog.text = response.data?.blog
             userName.text = userResponse.name
             followersText.visibility = View.VISIBLE
             followingText.visibility = View.VISIBLE
+
+            if (response.data?.blog == "") {
+                blogIcon.visibility = View.GONE
+            }
         }
         Glide.with(this)
             .load(userResponse.imageUrl)
             .circleCrop()
             .into(binding.userImage)
+    }
+
+    private fun navigateToFollowScreen() {
+        binding.apply {
+            followingText.setOnClickListener {
+                findNavController().navigate(UserDetailsFragmentDirections.fromUserDetailsToFollowingFragment(
+                    usersName))
+            }
+            followersText.setOnClickListener {
+                findNavController().navigate(UserDetailsFragmentDirections.fromUserDetailsToFollowersFragment(
+                    usersName))
+            }
+        }
     }
 
 

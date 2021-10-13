@@ -8,5 +8,10 @@ data class UserDetails(
     @SerializedName("following")
     val following: Int,
     @SerializedName("name")
-    val realName: String
+    val realName: String,
+    @SerializedName("bio")
+    val bio: String,
+    @SerializedName("blog")
+    val blog: String,
+
 )
