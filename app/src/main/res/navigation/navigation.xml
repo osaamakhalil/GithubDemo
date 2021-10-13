@@ -19,5 +19,27 @@
         <argument
             android:name="userResponse"
             app:argType="com.example.githubdemo.users.model.UserResponse" />
+        <action
+            android:id="@+id/from_userDetails_to_followingFragment"
+            app:destination="@id/followingFragment" />
+        <action
+            android:id="@+id/from_userDetails_to_followersFragment"
+            app:destination="@id/followersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/followingFragment"
+        android:name="com.example.githubdemo.users.detail.ui.FollowingFragment"
+        android:label="FollowingFragment" >
+        <argument
+            android:name="userName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/followersFragment"
+        android:name="com.example.githubdemo.users.detail.ui.FollowersFragment"
+        android:label="FollowersFragment" >
+        <argument
+            android:name="UserName"
+            app:argType="string" />
     </fragment>
 </navigation>

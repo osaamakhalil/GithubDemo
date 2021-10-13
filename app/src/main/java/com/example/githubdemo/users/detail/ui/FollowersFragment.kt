@@ -9,6 +9,7 @@ import android.widget.AbsListView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
@@ -17,7 +18,6 @@ import com.example.githubdemo.databinding.FragmentFollowersBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.detail.DetailsViewModel
 import com.example.githubdemo.users.detail.DetailsViewModelProviderFactory
-import com.example.githubdemo.utils.Constant
 import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.utils.Results
 
@@ -29,6 +29,7 @@ class FollowersFragment : Fragment() {
     private lateinit var detailsViewModel: DetailsViewModel
     private lateinit var userFollowingAdapter: ListUserAdapter
     private var isScrolling = false
+    private val args: FollowersFragmentArgs by navArgs()
     private lateinit var userName: String
 
     override fun onCreateView(
@@ -49,12 +50,11 @@ class FollowersFragment : Fragment() {
         detailsViewModel =
             ViewModelProvider(this, viewModelFactory).get(DetailsViewModel::class.java)
 
-        val bundle = this.arguments
-        if (bundle != null) {
-            userName = bundle.getString(Constant.USER_NAME_KEY).toString()
-            detailsViewModel.getUserFollowers(userName)
-            detailsViewModel.getUserDetails(userName)
-        }
+        userName = args.userName
+
+        detailsViewModel.getUserFollowers(userName)
+        detailsViewModel.getUserDetails(userName)
+
 
         userFollowersListResultsHandling()
         setUpRecyclerView(networkUtil)

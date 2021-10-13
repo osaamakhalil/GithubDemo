@@ -9,6 +9,7 @@ import android.widget.AbsListView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
@@ -18,7 +19,6 @@ import com.example.githubdemo.databinding.FragmentFollowingBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.detail.DetailsViewModel
 import com.example.githubdemo.users.detail.DetailsViewModelProviderFactory
-import com.example.githubdemo.utils.Constant.Companion.USER_NAME_KEY
 import com.example.githubdemo.utils.Results
 
 
@@ -28,8 +28,8 @@ class FollowingFragment : Fragment() {
     private lateinit var detailsViewModel: DetailsViewModel
     private lateinit var userFollowingAdapter: ListUserAdapter
     private var isScrolling = false
+    private val args: FollowingFragmentArgs by navArgs()
     private lateinit var userName: String
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,12 +50,10 @@ class FollowingFragment : Fragment() {
         detailsViewModel =
             ViewModelProvider(this, viewModelFactory).get(DetailsViewModel::class.java)
 
-        val bundle = this.arguments
-        if (bundle != null) {
-            userName = bundle.getString(USER_NAME_KEY).toString()
-            detailsViewModel.getUserFollowing(userName)
-            detailsViewModel.getUserDetails(userName)
-        }
+        userName = args.userName
+        detailsViewModel.getUserFollowing(userName)
+        detailsViewModel.getUserDetails(userName)
+
 
         userFollowingListResultsHandling()
         setUpRecyclerView(networkUtil)
@@ -89,7 +87,7 @@ class FollowingFragment : Fragment() {
         userFollowingAdapter = ListUserAdapter(
             networkUtil = networkUtil,
             onItemClicked = {},
-            onTryAgainClick = {detailsViewModel.getUserFollowing(userName)}
+            onTryAgainClick = { detailsViewModel.getUserFollowing(userName) }
         )
         binding.apply {
             followingRecycler.adapter = userFollowingAdapter
