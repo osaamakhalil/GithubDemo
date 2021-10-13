@@ -31,6 +31,10 @@ class DetailsViewModel(
     val usersRepoStatus: LiveData<Results<List<UserRepo>>>
         get() = _usersRepoStatus
 
+    private val _usersStarredStatus = MutableLiveData<Results<List<UserRepo>>>()
+    val usersStarredStatus: LiveData<Results<List<UserRepo>>>
+        get() = _usersStarredStatus
+
     private val _usersFollowingStatus = MutableLiveData<Results<List<UserResponse>>>()
     val usersFollowingStatus: LiveData<Results<List<UserResponse>>>
         get() = _usersFollowingStatus
@@ -68,7 +72,7 @@ class DetailsViewModel(
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     _usersRepoStatus.postValue(Results.Loading)
-                    val userRepos = userRepository.getUserRepo(name,50)
+                    val userRepos = userRepository.getUserRepo(name, 50)
                     if (userRepos.isNotEmpty()) {
                         _usersRepoStatus.postValue(Results.Success(userRepos))
                     }
@@ -81,6 +85,27 @@ class DetailsViewModel(
             _usersRepoStatus.postValue(Results.NoInternet)
         }
     }
+
+    fun getUserStarred(userName: String) {
+        if (networkUtil.hasInternetConnection()) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    _usersStarredStatus.postValue(Results.Loading)
+                    val userRepos = userRepository.getUserStarred(userName, 100)
+                    if (userRepos.isNotEmpty()) {
+                        _usersStarredStatus.postValue(Results.Success(userRepos))
+                    }
+                } catch (t: Throwable) {
+                    Log.e("DetailsViewModel", "${t.message}")
+                    _usersStarredStatus.postValue(Results.Error(t.message))
+                }
+            }
+        } else {
+            _usersStarredStatus.postValue(Results.NoInternet)
+        }
+
+    }
+
 
     //to get list of following
     fun getUserFollowing(userName: String) {
