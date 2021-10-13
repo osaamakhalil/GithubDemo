@@ -28,4 +28,7 @@ class UserRepositoryImpl : UserRepository {
         return userRemoteDataSource.getUserFollowers(userName, page)
     }
 
+    override suspend fun getUserStarred(userName: String, per_page: Int): List<UserRepo> {
+        return userRemoteDataSource.getUserStarred(userName, per_page)
+    }
 }

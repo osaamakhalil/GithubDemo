@@ -15,4 +15,7 @@ interface UserRepository {
     suspend fun getUserFollowing(userName: String, page: Int): MutableList<UserResponse>
 
     suspend fun getUserFollowers(userName: String, page: Int): MutableList<UserResponse>
+
+    suspend fun getUserStarred(userName: String, per_page: Int): List<UserRepo>
+
 }

@@ -37,5 +37,9 @@ interface UserApiService {
         @Query("page") page: Int
     ) : MutableList<UserResponse>
 
-
+    @GET("/users/{username}/starred")
+    suspend fun getUserStarred(
+        @Path("username") userName: String,
+        @Query("per_page") per_page: Int
+    ) : List<UserRepo>
 }
