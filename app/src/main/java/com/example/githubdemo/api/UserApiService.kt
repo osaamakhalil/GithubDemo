@@ -1,8 +1,10 @@
 package com.example.githubdemo.api
 
+import com.example.githubdemo.users.model.UserDetails
+import com.example.githubdemo.users.model.UserRepo
 import com.example.githubdemo.users.model.UserResponse
-import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UserApiService {
@@ -11,4 +13,33 @@ interface UserApiService {
     suspend fun getUsers(
         @Query("since") page:Int
     ): List<UserResponse>
+
+    @GET("/users/{username}")
+    suspend fun getUsersDetails(
+        @Path("username") userName: String,
+    ): UserDetails
+
+    @GET("/users/{username}/repos")
+    suspend fun getUserRepo(
+        @Path("username") userName: String,
+        @Query("per_page") per_page: Int
+    ) : List<UserRepo>
+
+    @GET("/users/{username}/following")
+    suspend fun getUserFollowing(
+        @Path("username") userName: String,
+        @Query("page") page: Int
+    ) : MutableList<UserResponse>
+
+    @GET("/users/{username}/followers")
+    suspend fun getUserFollowers(
+        @Path("username") userName: String,
+        @Query("page") page: Int
+    ) : MutableList<UserResponse>
+
+    @GET("/users/{username}/starred")
+    suspend fun getUserStarred(
+        @Path("username") userName: String,
+        @Query("per_page") per_page: Int
+    ) : List<UserRepo>
 }

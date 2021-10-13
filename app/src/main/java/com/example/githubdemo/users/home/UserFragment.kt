@@ -1,4 +1,4 @@
-package com.example.githubdemo.users
+package com.example.githubdemo.users.home
 
 import android.os.Bundle
 import android.util.Log
@@ -10,13 +10,15 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
-import com.example.githubdemo.adapter.UserAdapter
-import com.example.githubdemo.api.NetworkUtil
+import com.example.githubdemo.adapter.ListUserAdapter
+import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.FragmentUserBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
+import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Results
 import com.google.android.material.snackbar.Snackbar
 
@@ -25,14 +27,13 @@ class UserFragment : Fragment() {
 
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
-    private lateinit var userAdapter: UserAdapter
+    private lateinit var listUserAdapter: ListUserAdapter
     private lateinit var userViewModel: UserViewModel
-    private lateinit var layoutManager: LinearLayoutManager
-    var isScrolling = false
+    private var isScrolling = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false)
@@ -49,25 +50,36 @@ class UserFragment : Fragment() {
         userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java)
 
 
+        userListResultsHandling()
+        snackBarView(view)
+        setupRecyclerView(networkUtil)
+        swipeRefresh()
+        tryAgainButton()
+    }
+
+    private fun userListResultsHandling() {
         userViewModel.usersStatus.observe(viewLifecycleOwner, { usersResults ->
             usersResults?.let { response ->
                 when (response) {
                     is Results.Success -> {
+                        tryAgainView(false)
                         progressbarView(false)
                         serverErrorView(false)
                         noInternetView(false)
                         response.data?.let { userList ->
-                            userAdapter.submitList(userList)
-                            userAdapter.notifyItemChanged(userList.lastIndex)
+                            listUserAdapter.submitList(userList)
+                            listUserAdapter.notifyItemChanged(userList.lastIndex)
                         }
                     }
                     Results.Loading -> {
+                        tryAgainView(false)
                         progressbarView(true)
                         noInternetView(false)
                         serverErrorView(false)
                     }
                     is Results.Error -> {
-                        userAdapter.submitList(emptyList())
+                        listUserAdapter.submitList(emptyList())
+                        tryAgainView(true)
                         progressbarView(false)
                         noInternetView(false)
                         serverErrorView(true)
@@ -76,34 +88,44 @@ class UserFragment : Fragment() {
                         }
                     }
                     Results.NoInternet -> {
-                            progressbarView(false)
-                            serverErrorView(false)
-                            noInternetView(true)
+                        tryAgainView(true)
+                        progressbarView(false)
+                        serverErrorView(false)
+                        noInternetView(true)
                     }
                 }
             }
         })
+    }
+
+    private fun snackBarView(view: View) {
         userViewModel.showSnackBar.observe(viewLifecycleOwner, { showSnackBar ->
             if (showSnackBar == true) {
                 Snackbar.make(view, "NO INTERNET CONNECTION !!", Snackbar.LENGTH_SHORT).show()
             }
         })
-        swipeRefresh()
-        tryAgain()
-        setupRecyclerView()
     }
 
-    private fun setupRecyclerView() {
-        userAdapter = UserAdapter(userViewModel) {
-            userViewModel.getAllUsers()
-        }
-        layoutManager = LinearLayoutManager(activity)
+    private fun setupRecyclerView(networkUtil: NetworkUtil) {
+        listUserAdapter = ListUserAdapter(
+            networkUtil = networkUtil,
+            onItemClicked =
+            {
+                navigateToDetailsScreen(it)
+            },
+            onTryAgainClick = { userViewModel.getAllUsers() }
+        )
+        //   layoutManager = LinearLayoutManager(activity)
         binding.apply {
-            userRecycler.layoutManager = layoutManager
-            userRecycler.adapter = userAdapter
+            //    userRecycler.layoutManager = layoutManager
+            userRecycler.adapter = listUserAdapter
             userRecycler.addOnScrollListener(this@UserFragment.scrollListener)
         }
 
+    }
+
+    private fun navigateToDetailsScreen(user: UserResponse) {
+        findNavController().navigate(UserFragmentDirections.toUserDetails(user))
     }
 
     /*
@@ -143,7 +165,7 @@ class UserFragment : Fragment() {
         }
     }
 
-    private fun tryAgain() {
+    private fun tryAgainButton() {
         binding.btTryAgain.setOnClickListener {
             userViewModel.getAllUsers()
         }
@@ -154,7 +176,6 @@ class UserFragment : Fragment() {
     *  */
     private fun noInternetView(showViews: Boolean) {
         binding.tvNoInternet.isVisible = showViews
-        binding.btTryAgain.isVisible = showViews
     }
 
     private fun progressbarView(showViews: Boolean) {
@@ -163,6 +184,8 @@ class UserFragment : Fragment() {
 
     private fun serverErrorView(showViews: Boolean) {
         binding.ivServerError.isVisible = showViews
+    }
+    private fun tryAgainView(showViews: Boolean) {
         binding.btTryAgain.isVisible = showViews
     }
 }

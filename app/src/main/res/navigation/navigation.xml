@@ -1,12 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
     app:startDestination="@id/userFragment">
 
     <fragment
         android:id="@+id/userFragment"
-        android:name="com.example.githubdemo.users.UserFragment"
-        android:label="UserFragment" />
+        android:name="com.example.githubdemo.users.home.UserFragment"
+        android:label="UserFragment" >
+        <action
+            android:id="@+id/toUserDetails"
+            app:destination="@id/userDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDetails"
+        android:name="com.example.githubdemo.users.detail.ui.UserDetailsFragment"
+        android:label="UserDetails" >
+        <argument
+            android:name="userResponse"
+            app:argType="com.example.githubdemo.users.model.UserResponse" />
+        <action
+            android:id="@+id/from_userDetails_to_followingFragment"
+            app:destination="@id/followingFragment" />
+        <action
+            android:id="@+id/from_userDetails_to_followersFragment"
+            app:destination="@id/followersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/followingFragment"
+        android:name="com.example.githubdemo.users.detail.ui.FollowingFragment"
+        android:label="FollowingFragment" >
+        <argument
+            android:name="userName"
+            app:argType="string" />
+        <action
+            android:id="@+id/form_followingFragment_to_userDetails"
+            app:destination="@id/userDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/followersFragment"
+        android:name="com.example.githubdemo.users.detail.ui.FollowersFragment"
+        android:label="FollowersFragment" >
+        <argument
+            android:name="UserName"
+            app:argType="string" />
+        <action
+            android:id="@+id/form_followersFragment_to_userDetails"
+            app:destination="@id/userDetails" />
+    </fragment>
 </navigation>

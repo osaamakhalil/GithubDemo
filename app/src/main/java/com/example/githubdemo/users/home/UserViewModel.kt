@@ -1,8 +1,8 @@
-package com.example.githubdemo.users
+package com.example.githubdemo.users.home
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.githubdemo.api.NetworkUtil
+import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Results
@@ -16,7 +16,6 @@ class UserViewModel(
 ) : ViewModel() {
     //for paging handles
     private var since = 0
-    var noInternet = false
 
     private val _usersStatus = MutableLiveData<Results<List<UserResponse>>>()
     val usersStatus: LiveData<Results<List<UserResponse>>>
@@ -39,7 +38,7 @@ class UserViewModel(
     * */
     fun getAllUsers() {
         if (networkUtil.hasInternetConnection()) {
-            noInternet = false
+
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     if (userResponse == null) _usersStatus.postValue(Results.Loading)
@@ -66,10 +65,8 @@ class UserViewModel(
         } else {
             //if no list to show, then show some icon on center of screen
             if (userResponse == null) {
-                noInternet = true
                 _usersStatus.postValue(Results.NoInternet)
             } else {
-                noInternet = true
                 //if list not empty, used that to show no internet on bottom of page
                 _usersStatus.postValue(
                     Results.Success(
@@ -86,13 +83,11 @@ class UserViewModel(
     *  */
     fun swipeToRefresh() {
         if (networkUtil.hasInternetConnection()) {
-            noInternet = false
             since = 0
             userResponse = mutableListOf()
             getAllUsers()
             _showSnackBar.postValue(false)
         } else {
-            noInternet = true
             _showSnackBar.postValue(true)
         }
     }

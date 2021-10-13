@@ -6,4 +6,10 @@
     <string name="server_error">No Internet Connection !!</string>
     <string name="github_demo">GITHUB DEMO</string>
     <string name="try_again">Try again</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+    <string name="user_avatar">userAvatar</string>
+    <string name="right_arrow">right_arrow</string>
+    <string name="star_icon">star_icon</string>
+    <string name="fork_icon">fork_icon</string>
 </resources>
