@@ -9,6 +9,7 @@ import android.widget.AbsListView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ import com.example.githubdemo.databinding.FragmentFollowingBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.detail.DetailsViewModel
 import com.example.githubdemo.users.detail.DetailsViewModelProviderFactory
+import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Results
 
 
@@ -86,13 +88,20 @@ class FollowingFragment : Fragment() {
     private fun setUpRecyclerView(networkUtil: NetworkUtil) {
         userFollowingAdapter = ListUserAdapter(
             networkUtil = networkUtil,
-            onItemClicked = {},
+            onItemClicked = {
+                navigateToUserDetails(it)
+            },
             onTryAgainClick = { detailsViewModel.getUserFollowing(userName) }
         )
         binding.apply {
             followingRecycler.adapter = userFollowingAdapter
             followingRecycler.addOnScrollListener(this@FollowingFragment.scrollListener)
         }
+    }
+
+    private fun navigateToUserDetails(user: UserResponse) {
+        findNavController()
+            .navigate(FollowingFragmentDirections.formFollowingFragmentToUserDetails(user))
     }
 
     /*
