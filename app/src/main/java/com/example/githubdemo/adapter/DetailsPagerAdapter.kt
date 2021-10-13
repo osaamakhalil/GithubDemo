@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.githubdemo.users.detail.ui.FollowersFragment
 import com.example.githubdemo.users.detail.ui.FollowingFragment
 import com.example.githubdemo.users.detail.ui.RepositoryFragment
+import com.example.githubdemo.users.detail.ui.StarredFragment
 import com.example.githubdemo.utils.Constant.Companion.USER_NAME_KEY
 
 class DetailsPagerAdapter(
@@ -17,7 +18,7 @@ class DetailsPagerAdapter(
 ) : FragmentStateAdapter(fm, lifecycle) {
 
     override fun getItemCount(): Int {
-        return 3
+        return 2
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -26,10 +27,7 @@ class DetailsPagerAdapter(
             0 -> RepositoryFragment().apply {
                 arguments = bundleOf(USER_NAME_KEY to userName)
             }
-            1 -> FollowingFragment().apply {
-                arguments = bundleOf(USER_NAME_KEY to userName)
-            }
-            2 -> FollowersFragment().apply {
+            1 -> StarredFragment().apply {
                 arguments = bundleOf(USER_NAME_KEY to userName)
             }
             else -> RepositoryFragment()

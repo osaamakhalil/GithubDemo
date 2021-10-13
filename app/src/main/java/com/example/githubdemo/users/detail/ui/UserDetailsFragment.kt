@@ -124,8 +124,7 @@ class UserDetailsFragment : Fragment() {
         TabLayoutMediator(tabLayout, pager) { tab, position ->
             when (position) {
                 0 -> tab.text = "Repository"
-                1 -> tab.text = "Following"
-                2 -> tab.text = "Followers"
+                1 -> tab.text = "Starred"
             }
         }.attach()
 
