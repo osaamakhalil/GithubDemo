@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/userFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/userFragment"
@@ -48,4 +49,18 @@
             android:id="@+id/form_followersFragment_to_userDetails"
             app:destination="@id/userDetails" />
     </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.githubdemo.users.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/from_homeFragment_to_userFragment"
+            app:destination="@id/userFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookMarkFragment"
+        android:name="com.example.githubdemo.users.bookmark.BookMarkFragment"
+        android:label="fragment_book_mark"
+        tools:layout="@layout/fragment_book_mark" />
 </navigation>
