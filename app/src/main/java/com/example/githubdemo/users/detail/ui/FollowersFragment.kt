@@ -61,6 +61,7 @@ class FollowersFragment : Fragment() {
         userFollowersListResultsHandling()
         setUpRecyclerView(networkUtil)
         tryAgainButton()
+        navigateToBack()
     }
 
     private fun userFollowersListResultsHandling() {
@@ -120,6 +121,12 @@ class FollowersFragment : Fragment() {
     private fun navigateToUserDetails(user: UserResponse) {
         findNavController()
             .navigate(FollowersFragmentDirections.formFollowersFragmentToUserDetails(user))
+    }
+
+    private fun navigateToBack() {
+        binding.followersBackArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     /*

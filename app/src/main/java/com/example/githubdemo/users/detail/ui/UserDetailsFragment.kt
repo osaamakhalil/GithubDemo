@@ -88,6 +88,7 @@ class UserDetailsFragment : Fragment() {
         navigateToFollowScreen()
         tryAgain(usersName)
         setupDetailPagerView()
+        navigateToBack()
     }
 
 
@@ -125,6 +126,12 @@ class UserDetailsFragment : Fragment() {
                 findNavController().navigate(UserDetailsFragmentDirections.fromUserDetailsToFollowersFragment(
                     usersName))
             }
+        }
+    }
+
+    private fun navigateToBack() {
+        binding.detailsBackArrow.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

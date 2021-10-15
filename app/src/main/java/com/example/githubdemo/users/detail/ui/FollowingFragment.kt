@@ -60,7 +60,7 @@ class FollowingFragment : Fragment() {
         userFollowingListResultsHandling()
         setUpRecyclerView(networkUtil)
         tryAgainButton()
-
+        navigateToBack()
     }
 
     private fun userFollowingListResultsHandling() {
@@ -101,6 +101,12 @@ class FollowingFragment : Fragment() {
     private fun tryAgainButton() {
         binding.btFollowingTryAgain.setOnClickListener {
             detailsViewModel.getUserFollowing(userName)
+        }
+    }
+
+    private fun navigateToBack() {
+        binding.followingBackArrow.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
