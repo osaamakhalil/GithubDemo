@@ -55,6 +55,7 @@ class UserFragment : Fragment() {
         setupRecyclerView(networkUtil)
         swipeRefresh()
         tryAgainButton()
+        navigateToBack()
     }
 
     private fun userListResultsHandling() {
@@ -137,6 +138,7 @@ class UserFragment : Fragment() {
 
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
             val visibleItemCount = layoutManager.childCount
             val totalItemCount = layoutManager.itemCount
 
@@ -154,6 +156,12 @@ class UserFragment : Fragment() {
             if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                 isScrolling = true
             }
+        }
+    }
+
+    private fun navigateToBack() {
+        binding.userBackArrow.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
@@ -185,6 +193,7 @@ class UserFragment : Fragment() {
     private fun serverErrorView(showViews: Boolean) {
         binding.ivServerError.isVisible = showViews
     }
+
     private fun tryAgainView(showViews: Boolean) {
         binding.btTryAgain.isVisible = showViews
     }
