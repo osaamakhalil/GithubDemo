@@ -179,5 +179,19 @@ class DetailsViewModel(
         }
     }
 
+     fun getUserName(name: String) = userRepository.getUserName(name)
+
+    fun addUserToBookMark(user: UserResponse) {
+        viewModelScope.launch(Dispatchers.IO) {
+            userRepository.insertUser(user)
+        }
+    }
+
+    fun deleteUserFromBookMark(user: UserResponse) {
+        viewModelScope.launch(Dispatchers.IO) {
+            userRepository.deleteUser(user)
+        }
+    }
+
 
 }
