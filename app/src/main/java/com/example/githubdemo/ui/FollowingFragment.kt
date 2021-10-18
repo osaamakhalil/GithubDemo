@@ -1,4 +1,4 @@
-package com.example.githubdemo.users.detail.ui
+package com.example.githubdemo.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -18,8 +19,10 @@ import com.example.githubdemo.adapter.ListUserAdapter
 import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.FragmentFollowingBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
+import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.users.detail.DetailsViewModel
 import com.example.githubdemo.users.detail.DetailsViewModelProviderFactory
+import com.example.githubdemo.users.home.UserViewModelProviderFactory
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Results
 
@@ -27,7 +30,14 @@ import com.example.githubdemo.utils.Results
 class FollowingFragment : Fragment() {
     private var _binding: FragmentFollowingBinding? = null
     private val binding get() = _binding!!
-    private lateinit var detailsViewModel: DetailsViewModel
+    private val networkUtil: NetworkUtil by lazy {
+        NetworkUtil(requireContext())
+    }
+    private val detailsViewModel: DetailsViewModel by viewModels {
+        val repository =
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+        DetailsViewModelProviderFactory(repository, networkUtil)
+    }
     private lateinit var userFollowingAdapter: ListUserAdapter
     private var isScrolling = false
     private val args: FollowingFragmentArgs by navArgs()
@@ -44,13 +54,6 @@ class FollowingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val repository = UserRepositoryImpl()
-        val application = requireActivity().application
-        val networkUtil = NetworkUtil(application)
-        val viewModelFactory = DetailsViewModelProviderFactory(repository, networkUtil)
-        detailsViewModel =
-            ViewModelProvider(this, viewModelFactory).get(DetailsViewModel::class.java)
 
         userName = args.userName
         detailsViewModel.getUserFollowing(userName)
@@ -117,6 +120,7 @@ class FollowingFragment : Fragment() {
                 navigateToUserDetails(it)
             },
             onTryAgainClick = { detailsViewModel.getUserFollowing(userName) }
+            ,isBookMark = false
         )
         binding.apply {
             followingRecycler.adapter = userFollowingAdapter
@@ -126,7 +130,8 @@ class FollowingFragment : Fragment() {
 
     private fun navigateToUserDetails(user: UserResponse) {
         findNavController()
-            .navigate(FollowingFragmentDirections.formFollowingFragmentToUserDetails(user))
+            .navigate(FollowingFragmentDirections.formFollowingFragmentToUserDetails(
+                user))
     }
 
     /*

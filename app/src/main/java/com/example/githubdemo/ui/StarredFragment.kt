@@ -1,4 +1,4 @@
-package com.example.githubdemo.users.detail.ui
+package com.example.githubdemo.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,13 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.UserRepoAdapter
 import com.example.githubdemo.databinding.FragmentStarredBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
+import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.users.detail.DetailsViewModel
 import com.example.githubdemo.users.detail.DetailsViewModelProviderFactory
+import com.example.githubdemo.users.home.UserViewModelProviderFactory
 import com.example.githubdemo.utils.Constant
 import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.utils.Results
@@ -23,7 +25,14 @@ class StarredFragment : Fragment() {
     private var _binding: FragmentStarredBinding? = null
     private val binding get() = _binding!!
     private lateinit var repoAdapter: UserRepoAdapter
-    private lateinit var detailsViewModel: DetailsViewModel
+    val networkUtil: NetworkUtil by lazy {
+        NetworkUtil(requireContext())
+    }
+    private val detailsViewModel: DetailsViewModel by viewModels {
+        val repository =
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+        DetailsViewModelProviderFactory(repository, networkUtil)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,13 +46,6 @@ class StarredFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val repository = UserRepositoryImpl()
-        val application = requireActivity().application
-        val networkUtil = NetworkUtil(application)
-        val viewModelFactory = DetailsViewModelProviderFactory(repository, networkUtil)
-        detailsViewModel =
-
-            ViewModelProvider(this, viewModelFactory).get(DetailsViewModel::class.java)
         val bundle = this.arguments
         val userName = bundle?.getString(Constant.USER_NAME_KEY)
         if (userName != null) {

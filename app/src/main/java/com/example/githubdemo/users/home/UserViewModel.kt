@@ -30,13 +30,13 @@ class UserViewModel(
         get() = _showSnackBar
 
     init {
-        getAllUsers()
+        getUsers()
     }
 
     /*
     * make call to get all user list
     * */
-    fun getAllUsers() {
+    fun getUsers() {
         if (networkUtil.hasInternetConnection()) {
 
             viewModelScope.launch(Dispatchers.IO) {
@@ -85,7 +85,7 @@ class UserViewModel(
         if (networkUtil.hasInternetConnection()) {
             since = 0
             userResponse = mutableListOf()
-            getAllUsers()
+            getUsers()
             _showSnackBar.postValue(false)
         } else {
             _showSnackBar.postValue(true)

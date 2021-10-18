@@ -5,10 +5,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.githubdemo.users.detail.ui.FollowersFragment
-import com.example.githubdemo.users.detail.ui.FollowingFragment
-import com.example.githubdemo.users.detail.ui.RepositoryFragment
-import com.example.githubdemo.users.detail.ui.StarredFragment
+import com.example.githubdemo.ui.RepositoryFragment
+import com.example.githubdemo.ui.StarredFragment
 import com.example.githubdemo.utils.Constant.Companion.USER_NAME_KEY
 
 class DetailsPagerAdapter(

@@ -1,4 +1,4 @@
-package com.example.githubdemo.users.home
+package com.example.githubdemo.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -36,14 +36,14 @@ class HomeFragment : Fragment() {
 
 
     private fun navigateToUsersFragment() {
-        binding.tvUsers.setOnClickListener {
+        binding.usersCardView.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.fromHomeFragmentToUserFragment())
         }
     }
 
     private fun openGithubWepPage() {
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com"))
-        binding.tvGitHubWep.setOnClickListener {
+        binding.gitHubWebCardView.setOnClickListener {
             startActivity(browserIntent)
         }
     }

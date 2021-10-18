@@ -1,4 +1,4 @@
-package com.example.githubdemo.users.detail.ui
+package com.example.githubdemo.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -16,9 +16,11 @@ import com.example.githubdemo.adapter.DetailsPagerAdapter
 import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.FragmentUserDetailsBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
+import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.users.detail.DetailsViewModel
 import com.example.githubdemo.users.detail.DetailsViewModelProviderFactory
 import com.example.githubdemo.users.model.UserDetails
+import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Results
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -27,7 +29,17 @@ class UserDetailsFragment : Fragment() {
     private var _binding: FragmentUserDetailsBinding? = null
     private val binding get() = _binding!!
     private val args: UserDetailsFragmentArgs by navArgs()
-    private lateinit var detailsViewModel: DetailsViewModel
+    private val networkUtil by lazy {
+        NetworkUtil(requireContext())
+    }
+    private val detailsViewModel: DetailsViewModel by viewModels {
+        val repository =
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+        DetailsViewModelProviderFactory(repository, networkUtil)
+
+    }
+    private var isFavorite = false
+
     private lateinit var usersName: String
 
     override fun onCreateView(
@@ -43,17 +55,22 @@ class UserDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val repository = UserRepositoryImpl()
-        val application = requireActivity().application
-        val networkUtil = NetworkUtil(application)
-        val viewModelFactory = DetailsViewModelProviderFactory(repository, networkUtil)
-        detailsViewModel =
-            ViewModelProvider(this, viewModelFactory).get(DetailsViewModel::class.java)
 
         usersName = args.userResponse.name
-
         detailsViewModel.getUserDetails(usersName)
 
+
+        handleUserDetailsStatus()
+        setupDetailPagerView()
+        navigateToFollowScreen()
+        tryAgain(usersName)
+        addAndRemoveFromBookMarks(args.userResponse.name)
+        navigateToBack()
+
+
+    }
+
+    private fun handleUserDetailsStatus() {
         detailsViewModel.usersDetailsStatus.observe(viewLifecycleOwner) { UserFollowCount ->
             UserFollowCount?.let { response ->
                 when (response) {
@@ -85,10 +102,6 @@ class UserDetailsFragment : Fragment() {
                 }
             }
         }
-        navigateToFollowScreen()
-        tryAgain(usersName)
-        setupDetailPagerView()
-        navigateToBack()
     }
 
 
@@ -105,6 +118,8 @@ class UserDetailsFragment : Fragment() {
             followingText.visibility = View.VISIBLE
             blogIcon.visibility = View.VISIBLE
             followIcon.visibility = View.VISIBLE
+            tvUsersDetails.visibility = View.VISIBLE
+            bookMarkIcon.visibility = View.VISIBLE
 
             if (response.data?.blog == "") {
                 blogIcon.visibility = View.GONE
@@ -157,7 +172,39 @@ class UserDetailsFragment : Fragment() {
                 1 -> tab.text = "Starred"
             }
         }.attach()
+    }
 
+
+    /*
+    * add/remove users from book marks
+    *  */
+    private fun addAndRemoveFromBookMarks(name: String) {
+        detailsViewModel.getUserName(name).observe(viewLifecycleOwner) { listOfUsers ->
+            if (listOfUsers == null || listOfUsers.isEmpty()) {
+                binding.bookMarkIcon.setImageResource(R.drawable.ic_baseline_bookmark_white_24)
+                isFavorite = false
+            } else {
+                binding.bookMarkIcon.setImageResource(R.drawable.ic_baseline_bookmark_24)
+                isFavorite = true
+
+            }
+        }
+        binding.bookMarkIcon.setOnClickListener {
+            if (isFavorite) {
+                deleteUserFromBookMarks(args.userResponse)
+            } else {
+                addUserToBookMarks(args.userResponse)
+            }
+        }
+
+    }
+
+    private fun deleteUserFromBookMarks(user: UserResponse) {
+        detailsViewModel.deleteUserFromBookMark(user)
+    }
+
+    private fun addUserToBookMarks(user: UserResponse) {
+        detailsViewModel.addUserToBookMark(user)
     }
 
     private fun progressbarView(showViews: Boolean) {

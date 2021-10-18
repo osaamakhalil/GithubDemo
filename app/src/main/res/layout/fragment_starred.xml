@@ -9,7 +9,7 @@
 
 android:layout_height="match_parent"
 android:layout_width="match_parent"
-tools:context=".users.detail.ui.StarredFragment">
+tools:context=".ui.StarredFragment">
 
 
     <androidx.recyclerview.widget.RecyclerView

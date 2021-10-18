@@ -1,4 +1,4 @@
-package com.example.githubdemo.users.detail.ui
+package com.example.githubdemo.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -16,9 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.ListUserAdapter
 import com.example.githubdemo.databinding.FragmentFollowersBinding
+import com.example.githubdemo.repository.UserLocalDataSource
 import com.example.githubdemo.repository.UserRepositoryImpl
+import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.users.detail.DetailsViewModel
 import com.example.githubdemo.users.detail.DetailsViewModelProviderFactory
+import com.example.githubdemo.users.home.UserViewModelProviderFactory
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.utils.Results
@@ -28,9 +32,16 @@ class FollowersFragment : Fragment() {
 
     private var _binding: FragmentFollowersBinding? = null
     private val binding get() = _binding!!
-    private lateinit var detailsViewModel: DetailsViewModel
     private lateinit var userFollowingAdapter: ListUserAdapter
     private var isScrolling = false
+    private val networkUtil: NetworkUtil by lazy {
+        NetworkUtil(requireContext())
+    }
+    private val detailsViewModel: DetailsViewModel by viewModels {
+        val repository =
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+        DetailsViewModelProviderFactory(repository, networkUtil)
+    }
     private val args: FollowersFragmentArgs by navArgs()
     private lateinit var userName: String
 
@@ -45,12 +56,6 @@ class FollowersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val repository = UserRepositoryImpl()
-        val application = requireActivity().application
-        val networkUtil = NetworkUtil(application)
-        val viewModelFactory = DetailsViewModelProviderFactory(repository, networkUtil)
-        detailsViewModel =
-            ViewModelProvider(this, viewModelFactory).get(DetailsViewModel::class.java)
 
         userName = args.userName
 
@@ -110,7 +115,8 @@ class FollowersFragment : Fragment() {
             onItemClicked = {
                 navigateToUserDetails(it)
             },
-            onTryAgainClick = { detailsViewModel.getUserFollowers(userName) }
+            onTryAgainClick = { detailsViewModel.getUserFollowers(userName) },
+            isBookMark = false
         )
         binding.apply {
             followersRecycler.adapter = userFollowingAdapter
@@ -120,7 +126,8 @@ class FollowersFragment : Fragment() {
 
     private fun navigateToUserDetails(user: UserResponse) {
         findNavController()
-            .navigate(FollowersFragmentDirections.formFollowersFragmentToUserDetails(user))
+            .navigate(FollowersFragmentDirections.formFollowersFragmentToUserDetails(
+                user))
     }
 
     private fun navigateToBack() {

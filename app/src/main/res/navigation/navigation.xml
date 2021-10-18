@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/userFragment"
-        android:name="com.example.githubdemo.users.home.UserFragment"
+        android:name="com.example.githubdemo.ui.UserFragment"
         android:label="UserFragment" >
         <action
             android:id="@+id/toUserDetails"
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/userDetails"
-        android:name="com.example.githubdemo.users.detail.ui.UserDetailsFragment"
+        android:name="com.example.githubdemo.ui.UserDetailsFragment"
         android:label="UserDetails" >
         <argument
             android:name="userResponse"
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/followingFragment"
-        android:name="com.example.githubdemo.users.detail.ui.FollowingFragment"
+        android:name="com.example.githubdemo.ui.FollowingFragment"
         android:label="FollowingFragment" >
         <argument
             android:name="userName"
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/followersFragment"
-        android:name="com.example.githubdemo.users.detail.ui.FollowersFragment"
+        android:name="com.example.githubdemo.ui.FollowersFragment"
         android:label="FollowersFragment" >
         <argument
             android:name="UserName"
@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.githubdemo.users.home.HomeFragment"
+        android:name="com.example.githubdemo.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -60,7 +60,11 @@
     </fragment>
     <fragment
         android:id="@+id/bookMarkFragment"
-        android:name="com.example.githubdemo.users.bookmark.BookMarkFragment"
+        android:name="com.example.githubdemo.ui.BookMarkFragment"
         android:label="fragment_book_mark"
-        tools:layout="@layout/fragment_book_mark" />
+        tools:layout="@layout/fragment_book_mark" >
+        <action
+            android:id="@+id/from_bookMarkFragment_to_userDetails"
+            app:destination="@id/userDetails" />
+    </fragment>
 </navigation>
