@@ -1,4 +1,4 @@
-package com.example.githubdemo.users.home
+package com.example.githubdemo.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +9,7 @@ import android.widget.AbsListView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +18,9 @@ import com.example.githubdemo.adapter.ListUserAdapter
 import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.FragmentUserBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
+import com.example.githubdemo.db.UsersDatabase
+import com.example.githubdemo.users.home.UserViewModel
+import com.example.githubdemo.users.home.UserViewModelProviderFactory
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Results
 import com.google.android.material.snackbar.Snackbar
@@ -28,7 +31,15 @@ class UserFragment : Fragment() {
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
     private lateinit var listUserAdapter: ListUserAdapter
-    private lateinit var userViewModel: UserViewModel
+    val networkUtil: NetworkUtil by lazy {
+        NetworkUtil(requireContext())
+    }
+
+    private val userViewModel: UserViewModel by viewModels {
+        val repository =
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+        UserViewModelProviderFactory(repository, networkUtil)
+    }
     private var isScrolling = false
 
     override fun onCreateView(
@@ -43,12 +54,7 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val repository = UserRepositoryImpl()
-        val application = requireActivity().application
-        val networkUtil = NetworkUtil(application)
-        val viewModelFactory = UserViewModelProviderFactory(repository, networkUtil)
-        userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java)
-
+        userViewModel.getUsers()
 
         userListResultsHandling()
         snackBarView(view)
@@ -114,11 +120,9 @@ class UserFragment : Fragment() {
             {
                 navigateToDetailsScreen(it)
             },
-            onTryAgainClick = { userViewModel.getAllUsers() }
+            onTryAgainClick = { userViewModel.getUsers() }
         )
-        //   layoutManager = LinearLayoutManager(activity)
         binding.apply {
-            //    userRecycler.layoutManager = layoutManager
             userRecycler.adapter = listUserAdapter
             userRecycler.addOnScrollListener(this@UserFragment.scrollListener)
         }
@@ -146,7 +150,7 @@ class UserFragment : Fragment() {
             val isNotAtBeginning = firstVisibleItemPosition >= 0
             val shouldPaginate = isAtLastItem && isNotAtBeginning && isScrolling
             if (shouldPaginate) {
-                userViewModel.getAllUsers()
+                userViewModel.getUsers()
                 isScrolling = false
             }
         }
@@ -175,7 +179,7 @@ class UserFragment : Fragment() {
 
     private fun tryAgainButton() {
         binding.btTryAgain.setOnClickListener {
-            userViewModel.getAllUsers()
+            userViewModel.getUsers()
         }
     }
 
