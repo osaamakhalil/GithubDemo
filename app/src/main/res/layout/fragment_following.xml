@@ -7,7 +7,7 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".users.detail.ui.FollowingFragment">
+        tools:context=".ui.FollowingFragment">
         <include
             android:id="@+id/following_back_arrow"
             layout="@layout/back_arrow"
