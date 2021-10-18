@@ -20,7 +20,6 @@ import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.users.detail.DetailsViewModel
 import com.example.githubdemo.users.detail.DetailsViewModelProviderFactory
 import com.example.githubdemo.users.model.UserDetails
-import com.example.githubdemo.users.model.UserRepo
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.Results
 import com.google.android.material.tabs.TabLayoutMediator
@@ -119,6 +118,8 @@ class UserDetailsFragment : Fragment() {
             followingText.visibility = View.VISIBLE
             blogIcon.visibility = View.VISIBLE
             followIcon.visibility = View.VISIBLE
+            tvUsersDetails.visibility = View.VISIBLE
+            bookMarkIcon.visibility = View.VISIBLE
 
             if (response.data?.blog == "") {
                 blogIcon.visibility = View.GONE
@@ -199,11 +200,11 @@ class UserDetailsFragment : Fragment() {
     }
 
     private fun deleteUserFromBookMarks(user: UserResponse) {
-            detailsViewModel.deleteUserFromBookMark(user)
+        detailsViewModel.deleteUserFromBookMark(user)
     }
 
     private fun addUserToBookMarks(user: UserResponse) {
-            detailsViewModel.addUserToBookMark(user)
+        detailsViewModel.addUserToBookMark(user)
     }
 
     private fun progressbarView(showViews: Boolean) {
