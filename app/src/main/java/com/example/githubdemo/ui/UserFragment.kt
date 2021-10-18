@@ -119,7 +119,8 @@ class UserFragment : Fragment() {
             {
                 navigateToDetailsScreen(it)
             },
-            onTryAgainClick = { userViewModel.getUsers() }
+            onTryAgainClick = { userViewModel.getUsers() },
+            isBookMark = false
         )
         binding.apply {
             userRecycler.adapter = listUserAdapter

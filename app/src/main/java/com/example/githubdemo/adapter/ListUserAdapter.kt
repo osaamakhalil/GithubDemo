@@ -20,6 +20,7 @@ class ListUserAdapter(
     private val networkUtil: NetworkUtil,
     private val onItemClicked: (UserResponse) -> Unit,
     private val onTryAgainClick: () -> Unit,
+    private val isBookMark:Boolean,
 ) : ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallBack()) {
 
 
@@ -53,10 +54,13 @@ class ListUserAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - 1 && !networkUtil.lastPage && itemCount >= 6)
+        return if (isLoading(position))
             VIEW_TYPE_LOADING
         else
             USER_LIST_VIEW
+    }
+    private fun isLoading(position: Int):Boolean{
+     return position == itemCount - 1 && !networkUtil.lastPage && itemCount >= 6 && !isBookMark
     }
 
     private fun populateItemRows(viewHolder: UserViewHolder, position: Int) {

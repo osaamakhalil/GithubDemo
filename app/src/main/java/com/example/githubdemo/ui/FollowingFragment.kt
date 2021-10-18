@@ -120,6 +120,7 @@ class FollowingFragment : Fragment() {
                 navigateToUserDetails(it)
             },
             onTryAgainClick = { detailsViewModel.getUserFollowing(userName) }
+            ,isBookMark = false
         )
         binding.apply {
             followingRecycler.adapter = userFollowingAdapter

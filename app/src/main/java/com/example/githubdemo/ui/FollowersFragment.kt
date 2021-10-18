@@ -115,7 +115,8 @@ class FollowersFragment : Fragment() {
             onItemClicked = {
                 navigateToUserDetails(it)
             },
-            onTryAgainClick = { detailsViewModel.getUserFollowers(userName) }
+            onTryAgainClick = { detailsViewModel.getUserFollowers(userName) },
+            isBookMark = false
         )
         binding.apply {
             followersRecycler.adapter = userFollowingAdapter
