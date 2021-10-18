@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.ListUserAdapter
 import com.example.githubdemo.bookmark.BookMarkViewModel
@@ -17,6 +19,7 @@ import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.NetworkUtil
+import com.google.android.material.snackbar.Snackbar
 
 
 class BookMarkFragment : Fragment() {
@@ -52,6 +55,36 @@ class BookMarkFragment : Fragment() {
         navigateBack()
     }
 
+    /*
+    * handle swipe to delete
+    * */
+    private val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+        ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+    ) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder,
+        ): Boolean {
+            return true
+        }
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.adapterPosition
+            val user = listUserAdapter.currentList[position]
+            bookMarkViewModel.deleteUser(user)
+            view?.let {
+                Snackbar.make(it, "Successfully deleted user", Snackbar.LENGTH_LONG).apply {
+                    setAction("Undo") {
+                        bookMarkViewModel.saveUser(user)
+                    }
+                    show()
+                }
+            }
+        }
+    }
+
+
     private fun setupRecyclerView(networkUtil: NetworkUtil) {
         listUserAdapter = ListUserAdapter(
             networkUtil = networkUtil,
@@ -64,7 +97,13 @@ class BookMarkFragment : Fragment() {
         )
         binding.apply {
             bookmarkRecycler.adapter = listUserAdapter
+
+            // handle swipe to delete
+            ItemTouchHelper(itemTouchHelperCallback).apply {
+                attachToRecyclerView(bookmarkRecycler)
+            }
         }
+
     }
 
     private fun navigateToUserDetails(user: UserResponse) {
