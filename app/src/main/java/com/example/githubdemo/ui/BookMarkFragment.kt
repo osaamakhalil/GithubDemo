@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.ListUserAdapter
 import com.example.githubdemo.bookmark.BookMarkViewModel
@@ -14,6 +15,7 @@ import com.example.githubdemo.bookmark.BookMarkViewModelFactory
 import com.example.githubdemo.databinding.FragmentBookMarkBinding
 import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.repository.UserRepositoryImpl
+import com.example.githubdemo.users.model.UserResponse
 import com.example.githubdemo.utils.NetworkUtil
 
 
@@ -47,6 +49,7 @@ class BookMarkFragment : Fragment() {
             listUserAdapter.submitList(it)
         }
         setupRecyclerView(networkUtil)
+        navigateBack()
     }
 
     private fun setupRecyclerView(networkUtil: NetworkUtil) {
@@ -54,13 +57,24 @@ class BookMarkFragment : Fragment() {
             networkUtil = networkUtil,
             onItemClicked =
             {
-
+                navigateToUserDetails(it)
             },
-            onTryAgainClick = { }
+            onTryAgainClick = { },
+            isBookMark = true
         )
         binding.apply {
             bookmarkRecycler.adapter = listUserAdapter
         }
+    }
 
+    private fun navigateToUserDetails(user: UserResponse) {
+        findNavController().navigate(BookMarkFragmentDirections.fromBookMarkFragmentToUserDetails(
+            user))
+    }
+
+    private fun navigateBack() {
+        binding.bookMarkBackArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 }

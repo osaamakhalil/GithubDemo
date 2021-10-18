@@ -62,5 +62,9 @@
         android:id="@+id/bookMarkFragment"
         android:name="com.example.githubdemo.ui.BookMarkFragment"
         android:label="fragment_book_mark"
-        tools:layout="@layout/fragment_book_mark" />
+        tools:layout="@layout/fragment_book_mark" >
+        <action
+            android:id="@+id/from_bookMarkFragment_to_userDetails"
+            app:destination="@id/userDetails" />
+    </fragment>
 </navigation>
