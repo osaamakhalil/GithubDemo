@@ -54,7 +54,6 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userViewModel.getUsers()
 
         userListResultsHandling()
         snackBarView(view)
