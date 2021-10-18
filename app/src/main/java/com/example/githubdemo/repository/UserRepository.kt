@@ -1,5 +1,6 @@
 package com.example.githubdemo.repository
 
+import androidx.lifecycle.LiveData
 import com.example.githubdemo.users.model.UserDetails
 import com.example.githubdemo.users.model.UserRepo
 import com.example.githubdemo.users.model.UserResponse
@@ -18,4 +19,11 @@ interface UserRepository {
 
     suspend fun getUserStarred(userName: String, per_page: Int): List<UserRepo>
 
+    suspend fun insertUser(user: UserResponse): Long
+
+    fun getAllUsers(): LiveData<List<UserResponse>>
+
+    fun getUserName(name: String): LiveData<List<UserResponse>>
+
+    suspend fun deleteUser(user: UserResponse)
 }

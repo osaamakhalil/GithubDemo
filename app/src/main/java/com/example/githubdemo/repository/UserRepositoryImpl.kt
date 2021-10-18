@@ -1,12 +1,16 @@
 package com.example.githubdemo.repository
 
+import androidx.lifecycle.LiveData
+import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.users.model.UserDetails
 import com.example.githubdemo.users.model.UserRepo
 import com.example.githubdemo.users.model.UserResponse
 
 
-class UserRepositoryImpl : UserRepository {
+class UserRepositoryImpl(db: UsersDatabase) : UserRepository {
+
     private val userRemoteDataSource: UserRemoteDataSource = UserRemoteDataSource()
+    private val userLocalDataSource: UserLocalDataSource = UserLocalDataSource(db)
 
     override suspend fun getUsers(page: Int): List<UserResponse> {
         return userRemoteDataSource.getUsers(page)
@@ -31,4 +35,21 @@ class UserRepositoryImpl : UserRepository {
     override suspend fun getUserStarred(userName: String, per_page: Int): List<UserRepo> {
         return userRemoteDataSource.getUserStarred(userName, per_page)
     }
+
+    override suspend fun insertUser(user: UserResponse): Long {
+        return userLocalDataSource.insertUser(user)
+    }
+
+    override fun getAllUsers(): LiveData<List<UserResponse>> {
+        return userLocalDataSource.getAllUsers()
+    }
+
+    override fun getUserName(name: String): LiveData<List<UserResponse>> {
+        return userLocalDataSource.getUserName(name)
+    }
+
+    override suspend fun deleteUser(user: UserResponse) {
+        return userLocalDataSource.deleteUser(user)
+    }
+
 }
