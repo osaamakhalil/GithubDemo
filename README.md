@@ -24,9 +24,9 @@ I create this repo for a few reasons:
 - [Swiperefreshlayout](https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout)
 
 # Requirements
--JDK 1.8
--Android SDK
--Latest Android SDK Tools and build tools.
+- JDK 1.8
+- Android SDK
+- Latest Android SDK Tools and build tools.
 
 # App Feature
 - Explore all github features from Home View
