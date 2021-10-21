@@ -16,7 +16,6 @@ import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.users.detail.DetailsViewModel
 import com.example.githubdemo.users.detail.DetailsViewModelProviderFactory
-import com.example.githubdemo.users.home.UserViewModelProviderFactory
 import com.example.githubdemo.utils.Results
 import com.example.githubdemo.utils.Constant.Companion.USER_NAME_KEY
 

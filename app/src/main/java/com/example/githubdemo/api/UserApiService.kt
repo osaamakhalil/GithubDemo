@@ -1,5 +1,6 @@
 package com.example.githubdemo.api
 
+import com.example.githubdemo.users.model.Search
 import com.example.githubdemo.users.model.UserDetails
 import com.example.githubdemo.users.model.UserRepo
 import com.example.githubdemo.users.model.UserResponse
@@ -11,7 +12,7 @@ interface UserApiService {
 
     @GET("users")
     suspend fun getUsers(
-        @Query("since") page:Int
+        @Query("since") page: Int,
     ): List<UserResponse>
 
     @GET("/users/{username}")
@@ -22,24 +23,30 @@ interface UserApiService {
     @GET("/users/{username}/repos")
     suspend fun getUserRepo(
         @Path("username") userName: String,
-        @Query("per_page") per_page: Int
-    ) : List<UserRepo>
+        @Query("per_page") per_page: Int,
+    ): List<UserRepo>
 
     @GET("/users/{username}/following")
     suspend fun getUserFollowing(
         @Path("username") userName: String,
-        @Query("page") page: Int
-    ) : MutableList<UserResponse>
+        @Query("page") page: Int,
+    ): MutableList<UserResponse>
 
     @GET("/users/{username}/followers")
     suspend fun getUserFollowers(
         @Path("username") userName: String,
-        @Query("page") page: Int
-    ) : MutableList<UserResponse>
+        @Query("page") page: Int,
+    ): MutableList<UserResponse>
 
     @GET("/users/{username}/starred")
     suspend fun getUserStarred(
         @Path("username") userName: String,
-        @Query("per_page") per_page: Int
-    ) : List<UserRepo>
+        @Query("per_page") per_page: Int,
+    ): List<UserRepo>
+
+    @GET("/search/users")
+    suspend fun searchForUser(
+        @Query("q") userName: String,
+        @Query("page") page: Int,
+        ): Search
 }

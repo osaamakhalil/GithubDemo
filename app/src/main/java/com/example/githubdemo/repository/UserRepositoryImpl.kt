@@ -2,6 +2,7 @@ package com.example.githubdemo.repository
 
 import androidx.lifecycle.LiveData
 import com.example.githubdemo.db.UsersDatabase
+import com.example.githubdemo.users.model.Search
 import com.example.githubdemo.users.model.UserDetails
 import com.example.githubdemo.users.model.UserRepo
 import com.example.githubdemo.users.model.UserResponse
@@ -34,6 +35,10 @@ class UserRepositoryImpl(db: UsersDatabase) : UserRepository {
 
     override suspend fun getUserStarred(userName: String, per_page: Int): List<UserRepo> {
         return userRemoteDataSource.getUserStarred(userName, per_page)
+    }
+
+    override suspend fun searchForUser(userName: String, page: Int): Search {
+        return userRemoteDataSource.searchForUser(userName, page)
     }
 
     override suspend fun insertUser(user: UserResponse): Long {
