@@ -60,7 +60,7 @@ class ListUserAdapter(
             USER_LIST_VIEW
     }
     private fun isLoading(position: Int):Boolean{
-     return position == itemCount - 1 && !networkUtil.lastPage && itemCount >= 6 && !isBookMark
+     return position == itemCount - 1 && !networkUtil.lastPage && itemCount >= 9 && !isBookMark
     }
 
     private fun populateItemRows(viewHolder: UserViewHolder, position: Int) {
