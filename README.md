@@ -38,8 +38,10 @@ I create this repo for a few reasons:
 - You can delete or Excute Bookmarks.
 - Swipe to Delete search Records
 - Swipe TO refresh  
+- paging/errors handleing 
 - Explore and search for Public Repositories.
 - Explore trending repos form Explore View ( beta )
+
 
 # Some App Views Screenshots
 on progress...
