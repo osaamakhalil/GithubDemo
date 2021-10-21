@@ -4,10 +4,10 @@ This sample code that implement MVVM architecture using Android architecture com
 
 I create this repo for a few reasons:
 
-  1.Get feedback from other developers to improve my code
-  2.To understand architecture component in sample way 
-  3.To apply what I have learned
-  4.To use as starting point for future projects
+  1. Get feedback from other developers to improve my code
+  2. To understand architecture component in sample way 
+  3. To apply what I have learned
+  4. To use as starting point for future projects
 
 # Libraries and tools used
 - [AndroidX](https://developer.android.com/jetpack/androidx)
@@ -42,6 +42,7 @@ I create this repo for a few reasons:
 - Explore trending repos form Explore View ( beta )
 
 # Some App Views Screenshots
+on progress...
 
 # TODO
 - Implement dagger
