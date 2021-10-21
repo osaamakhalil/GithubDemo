@@ -1,4 +1,4 @@
-package com.example.githubdemo.users.home
+package com.example.githubdemo.users.Users
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
