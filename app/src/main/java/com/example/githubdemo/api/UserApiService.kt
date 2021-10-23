@@ -1,9 +1,6 @@
 package com.example.githubdemo.api
 
-import com.example.githubdemo.users.model.Search
-import com.example.githubdemo.users.model.UserDetails
-import com.example.githubdemo.users.model.UserRepo
-import com.example.githubdemo.users.model.UserResponse
+import com.example.githubdemo.users.model.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -23,8 +20,8 @@ interface UserApiService {
     @GET("/users/{username}/repos")
     suspend fun getUserRepo(
         @Path("username") userName: String,
-        @Query("per_page") per_page: Int,
-    ): List<UserRepo>
+        @Query("page") page: Int,
+    ): MutableList<UserRepo>
 
     @GET("/users/{username}/following")
     suspend fun getUserFollowing(
@@ -48,5 +45,11 @@ interface UserApiService {
     suspend fun searchForUser(
         @Query("q") userName: String,
         @Query("page") page: Int,
-        ): Search
+    ): UsersSearch
+
+    @GET("/search/repositories")
+    suspend fun getPublicRepos(
+        @Query("page") page: Int,
+        @Query("q") repoName: String
+        ): PublicRepos
 }

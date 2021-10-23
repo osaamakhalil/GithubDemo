@@ -1,10 +1,7 @@
 package com.example.githubdemo.repository
 
 import androidx.lifecycle.LiveData
-import com.example.githubdemo.users.model.Search
-import com.example.githubdemo.users.model.UserDetails
-import com.example.githubdemo.users.model.UserRepo
-import com.example.githubdemo.users.model.UserResponse
+import com.example.githubdemo.users.model.*
 
 interface UserRepository {
 
@@ -12,7 +9,7 @@ interface UserRepository {
 
     suspend fun getUsersDetails(userName: String): UserDetails
 
-    suspend fun getUserRepo(userName: String, per_page: Int): List<UserRepo>
+    suspend fun getUserRepo(userName: String, page: Int): MutableList<UserRepo>
 
     suspend fun getUserFollowing(userName: String, page: Int): MutableList<UserResponse>
 
@@ -20,9 +17,11 @@ interface UserRepository {
 
     suspend fun getUserStarred(userName: String, per_page: Int): List<UserRepo>
 
-    suspend fun searchForUser(userName: String, page: Int): Search
+    suspend fun searchForUser(userName: String, page: Int): UsersSearch
 
     suspend fun insertUser(user: UserResponse): Long
+
+    suspend fun getPublicRepos(page: Int, repoName: String): PublicRepos
 
     fun getAllUsers(): LiveData<List<UserResponse>>
 

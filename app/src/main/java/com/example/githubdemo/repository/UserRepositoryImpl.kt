@@ -2,10 +2,7 @@ package com.example.githubdemo.repository
 
 import androidx.lifecycle.LiveData
 import com.example.githubdemo.db.UsersDatabase
-import com.example.githubdemo.users.model.Search
-import com.example.githubdemo.users.model.UserDetails
-import com.example.githubdemo.users.model.UserRepo
-import com.example.githubdemo.users.model.UserResponse
+import com.example.githubdemo.users.model.*
 
 
 class UserRepositoryImpl(db: UsersDatabase) : UserRepository {
@@ -21,8 +18,8 @@ class UserRepositoryImpl(db: UsersDatabase) : UserRepository {
         return userRemoteDataSource.getUsersDetails(userName)
     }
 
-    override suspend fun getUserRepo(userName: String, per_page: Int): List<UserRepo> {
-        return userRemoteDataSource.getUserRepo(userName, per_page)
+    override suspend fun getUserRepo(userName: String, page: Int): MutableList<UserRepo> {
+        return userRemoteDataSource.getUserRepo(userName, page)
     }
 
     override suspend fun getUserFollowing(userName: String, page: Int): MutableList<UserResponse> {
@@ -37,12 +34,16 @@ class UserRepositoryImpl(db: UsersDatabase) : UserRepository {
         return userRemoteDataSource.getUserStarred(userName, per_page)
     }
 
-    override suspend fun searchForUser(userName: String, page: Int): Search {
+    override suspend fun searchForUser(userName: String, page: Int): UsersSearch {
         return userRemoteDataSource.searchForUser(userName, page)
     }
 
     override suspend fun insertUser(user: UserResponse): Long {
         return userLocalDataSource.insertUser(user)
+    }
+
+    override suspend fun getPublicRepos(page: Int, repoName: String): PublicRepos {
+        return userRemoteDataSource.getPublicRepos(page, repoName)
     }
 
     override fun getAllUsers(): LiveData<List<UserResponse>> {

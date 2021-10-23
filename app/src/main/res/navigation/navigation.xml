@@ -57,6 +57,9 @@
         <action
             android:id="@+id/from_homeFragment_to_userFragment"
             app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/from_homeFragment_to_publicRepoFragment"
+            app:destination="@id/publicRepoFragment" />
     </fragment>
     <fragment
         android:id="@+id/bookMarkFragment"
@@ -67,4 +70,8 @@
             android:id="@+id/from_bookMarkFragment_to_userDetails"
             app:destination="@id/userDetails" />
     </fragment>
+    <fragment
+        android:id="@+id/publicRepoFragment"
+        android:name="com.example.githubdemo.ui.PublicRepoFragment"
+        android:label="PublicRepoFragment" />
 </navigation>

@@ -1,10 +1,7 @@
 package com.example.githubdemo.repository
 
 import com.example.githubdemo.api.RetrofitBuilder
-import com.example.githubdemo.users.model.Search
-import com.example.githubdemo.users.model.UserDetails
-import com.example.githubdemo.users.model.UserRepo
-import com.example.githubdemo.users.model.UserResponse
+import com.example.githubdemo.users.model.*
 
 
 class UserRemoteDataSource {
@@ -16,8 +13,8 @@ class UserRemoteDataSource {
         return RetrofitBuilder.userApiService.getUsersDetails(userName)
     }
 
-    suspend fun getUserRepo(userName: String, per_page: Int): List<UserRepo> {
-        return RetrofitBuilder.userApiService.getUserRepo(userName, per_page)
+    suspend fun getUserRepo(userName: String, page: Int): MutableList<UserRepo> {
+        return RetrofitBuilder.userApiService.getUserRepo(userName, page)
     }
 
     suspend fun getUserFollowing(userName: String, page: Int): MutableList<UserResponse> {
@@ -32,8 +29,12 @@ class UserRemoteDataSource {
         return RetrofitBuilder.userApiService.getUserStarred(userName, per_page)
     }
 
-    suspend fun searchForUser(userName: String, page: Int): Search {
+    suspend fun searchForUser(userName: String, page: Int): UsersSearch {
         return RetrofitBuilder.userApiService.searchForUser(userName, page)
+    }
+
+    suspend fun getPublicRepos(page: Int, repoName: String): PublicRepos {
+        return RetrofitBuilder.userApiService.getPublicRepos(page, repoName)
     }
 
 }
