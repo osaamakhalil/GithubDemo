@@ -52,4 +52,10 @@ interface UserApiService {
         @Query("page") page: Int,
         @Query("q") repoName: String
         ): PublicRepos
+
+    @GET("/search/issues")
+    suspend fun getPublicIssue(
+        @Query("page") page: Int,
+        @Query("q") IssueName: String
+        ): PublicIssues
 }

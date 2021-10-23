@@ -23,6 +23,8 @@ interface UserRepository {
 
     suspend fun getPublicRepos(page: Int, repoName: String): PublicRepos
 
+    suspend fun getPublicIssues(page: Int, IssueName: String): PublicIssues
+
     fun getAllUsers(): LiveData<List<UserResponse>>
 
     fun getUserName(name: String): LiveData<List<UserResponse>>

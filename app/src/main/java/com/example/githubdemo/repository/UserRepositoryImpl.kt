@@ -46,6 +46,10 @@ class UserRepositoryImpl(db: UsersDatabase) : UserRepository {
         return userRemoteDataSource.getPublicRepos(page, repoName)
     }
 
+    override suspend fun getPublicIssues(page: Int, IssueName: String): PublicIssues {
+        return userRemoteDataSource.getPublicIssues(page,IssueName)
+    }
+
     override fun getAllUsers(): LiveData<List<UserResponse>> {
         return userLocalDataSource.getAllUsers()
     }

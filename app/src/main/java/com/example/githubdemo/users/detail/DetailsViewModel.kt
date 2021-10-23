@@ -159,7 +159,11 @@ class DetailsViewModel(
                     }
                 }
             } else {
-                _usersFollowingStatus.postValue(Results.NoInternet)
+                if (userPresenterList == null){
+                    _usersFollowingStatus.postValue(Results.NoInternet)
+                }else{
+                    _usersFollowingStatus.postValue(Results.Success(userPresenterList))
+                }
             }
         } else {
             networkUtil.isLastPage(true)
@@ -195,7 +199,11 @@ class DetailsViewModel(
                     }
                 }
             } else {
-                _usersFollowersStatus.postValue(Results.NoInternet)
+                if (userPresenterList == null){
+                    _usersFollowersStatus.postValue(Results.NoInternet)
+                }else{
+                    _usersFollowersStatus.postValue(Results.Success(userPresenterList))
+                }
             }
         } else {
             networkUtil.isLastPage(true)

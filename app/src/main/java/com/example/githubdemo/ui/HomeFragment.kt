@@ -31,6 +31,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navigateToUsersFragment()
         navigateToReposFragment()
+        navigateToIssuesFragment()
         openGithubWepPage()
     }
 
@@ -44,6 +45,12 @@ class HomeFragment : Fragment() {
     private fun navigateToReposFragment() {
         binding.repoCardView.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.fromHomeFragmentToPublicRepoFragment())
+        }
+    }
+
+    private fun navigateToIssuesFragment(){
+        binding.issuesCardView.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.fromHomeFragmentToPublicIssuesFragment())
         }
     }
 
