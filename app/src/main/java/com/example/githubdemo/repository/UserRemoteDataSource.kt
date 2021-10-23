@@ -37,4 +37,8 @@ class UserRemoteDataSource {
         return RetrofitBuilder.userApiService.getPublicRepos(page, repoName)
     }
 
+    suspend fun getPublicIssues(page: Int, IssueName: String): PublicIssues {
+        return RetrofitBuilder.userApiService.getPublicIssue(page, IssueName)
+    }
+
 }
