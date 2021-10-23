@@ -73,7 +73,6 @@ class UsersRepositoryFragment() : Fragment() {
                         progressbarView(false)
                         noInternetView(false)
                         serverErrorView(true)
-                        progressbarView(false)
                     }
                     Results.Loading -> {
                         tryAgainView(false)
