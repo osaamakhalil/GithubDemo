@@ -93,6 +93,7 @@ class FollowingFragment : Fragment() {
                         tryAgainView(false)
                         progressBarView(false)
                         userFollowingAdapter.submitList(response.data)
+                        response.data?.let { userFollowingAdapter.notifyItemChanged(it.lastIndex) }
                     }
                 }
             }
