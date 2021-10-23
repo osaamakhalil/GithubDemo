@@ -59,6 +59,12 @@ class UsersRepositoryFragment() : Fragment() {
         detailsViewModel.getUserRepo(usersName)
         detailsViewModel.getUserDetails(usersName)
 
+        handleUsersRepoList()
+        setUpRecyclerView()
+        tryAgain()
+    }
+
+    private fun handleUsersRepoList() {
         detailsViewModel.usersRepoStatus.observe(viewLifecycleOwner) { userRepo ->
             userRepo?.let { response ->
                 when (response) {
@@ -87,12 +93,11 @@ class UsersRepositoryFragment() : Fragment() {
                         serverErrorView(false)
                         noInternetView(false)
                         repoAdapter.submitList(response.data)
+                        response.data?.let { repoAdapter.notifyItemChanged(it.lastIndex) }
                     }
                 }
             }
         }
-        setUpRecyclerView()
-
     }
 
     /*
@@ -125,6 +130,12 @@ class UsersRepositoryFragment() : Fragment() {
         }
     }
 
+    private fun tryAgain(){
+        binding.userRepoBtTryAgain.setOnClickListener {
+            detailsViewModel.getUserRepo(usersName)
+            detailsViewModel.getUserDetails(usersName)
+        }
+    }
     private fun setUpRecyclerView() {
         repoAdapter = UserRepoAdapter(
             networkUtil = networkUtil,
