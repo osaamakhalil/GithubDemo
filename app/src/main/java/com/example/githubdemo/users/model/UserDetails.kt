@@ -13,5 +13,6 @@ data class UserDetails(
     val bio: String,
     @SerializedName("blog")
     val blog: String,
-
+    @SerializedName("public_repos")
+    val numOfRepo: Int
 )

@@ -105,7 +105,7 @@ class UserViewModel(
                             searchPage++
                         }
                     } catch (t: Throwable) {
-                        _usersStatus.postValue(Results.Error(t.message))
+                        _searchStatus.postValue(Results.Error(t.message))
                         Log.e("UserViewModel", "${t.message}")
                     }
                 }

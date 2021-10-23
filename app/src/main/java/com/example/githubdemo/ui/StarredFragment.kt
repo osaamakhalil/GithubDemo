@@ -75,7 +75,10 @@ class StarredFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        repoAdapter = UserRepoAdapter()
+        repoAdapter = UserRepoAdapter(
+            networkUtil = networkUtil,
+            onTryAgainClick = {}
+        )
         binding.starredRecycler.adapter = repoAdapter
     }
 

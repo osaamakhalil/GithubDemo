@@ -118,7 +118,6 @@ class UserDetailsFragment : Fragment() {
             followingText.visibility = View.VISIBLE
             blogIcon.visibility = View.VISIBLE
             followIcon.visibility = View.VISIBLE
-            tvUsersDetails.visibility = View.VISIBLE
             bookMarkIcon.visibility = View.VISIBLE
 
             if (response.data?.blog == "") {

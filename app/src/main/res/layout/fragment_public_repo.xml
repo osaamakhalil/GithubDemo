@@ -6,12 +6,40 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.UsersRepositoryFragment">
+        tools:context= "ui.PublicRepoFragment"
+        >
+        <TextView
+            android:id="@+id/tv_repos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/repositories"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toTopOf="@+id/user_repo_recycler"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/repos_back_arrow"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/repos_back_arrow"
+            layout="@layout/back_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/user_repo_recycler"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/repo_recycler"
+            android:id="@+id/user_repo_recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="50dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -19,19 +47,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ProgressBar
-            android:id="@+id/user_repo_progress"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foregroundGravity="center"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
-            android:id="@+id/user_iv_server_error_repo"
+            android:id="@+id/iv_server_error_repo"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginBottom="16dp"
@@ -44,8 +62,20 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@drawable/ic_server_error" />
 
+        <ProgressBar
+            android:id="@+id/repo_progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
-            android:id="@+id/user_repo_tv_no_internet"
+            android:id="@+id/repo_tv_no_internet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-black"
@@ -57,7 +87,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/user_repo_bt_try_again"
+            android:id="@+id/repo_bt_try_again"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -66,8 +96,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/user_repo_tv_no_internet"
-            app:layout_constraintVertical_bias="0.26" />
+            app:layout_constraintTop_toTopOf="@+id/repo_tv_no_internet"
+            app:layout_constraintVertical_bias="0.13" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

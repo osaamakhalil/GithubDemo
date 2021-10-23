@@ -13,7 +13,6 @@ import android.content.Intent
 import android.net.Uri
 
 
-
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -22,8 +21,8 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
 
-            _binding =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -31,6 +30,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navigateToUsersFragment()
+        navigateToReposFragment()
         openGithubWepPage()
     }
 
@@ -38,6 +38,12 @@ class HomeFragment : Fragment() {
     private fun navigateToUsersFragment() {
         binding.usersCardView.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.fromHomeFragmentToUserFragment())
+        }
+    }
+
+    private fun navigateToReposFragment() {
+        binding.repoCardView.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.fromHomeFragmentToPublicRepoFragment())
         }
     }
 
