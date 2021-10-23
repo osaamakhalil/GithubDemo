@@ -21,7 +21,9 @@ class DetailsViewModel(
 ) {
     private var followPages = 1
     private var numberOfFollowing = 0
-    var numberOfFollower = 0
+    private var numberOfFollower = 0
+    private var totalRepo = 0
+    private var repoPages = 1
 
     private val _usersDetailsStatus = MutableLiveData<Results<UserDetails>>()
     val usersDetailsStatus: LiveData<Results<UserDetails>>
@@ -45,6 +47,7 @@ class DetailsViewModel(
 
     //add a new results to this list and use it to send to the view to present it
     private var userPresenterList: MutableList<UserResponse>? = null
+    private var userReposList: MutableList<UserRepo>? = null
 
 
     //make this request to get number of followers/following
@@ -53,10 +56,12 @@ class DetailsViewModel(
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     _usersDetailsStatus.postValue(Results.Loading)
-                    val followCount = userRepository.getUsersDetails(name)
-                    _usersDetailsStatus.postValue(Results.Success(followCount))
-                    numberOfFollowing = followCount.following
-                    numberOfFollower = followCount.followers
+                    val usersDetails = userRepository.getUsersDetails(name)
+                    _usersDetailsStatus.postValue(Results.Success(usersDetails))
+                    numberOfFollowing = usersDetails.following
+                    numberOfFollower = usersDetails.followers
+                    totalRepo = usersDetails.numOfRepo
+
                 } catch (t: Throwable) {
                     Log.e("DetailsViewModel", "${t.message}")
                     _usersDetailsStatus.postValue(Results.Error(t.message))
@@ -68,21 +73,40 @@ class DetailsViewModel(
     }
 
     fun getUserRepo(name: String) {
-        if (networkUtil.hasInternetConnection()) {
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    _usersRepoStatus.postValue(Results.Loading)
-                    val userRepos = userRepository.getUserRepo(name, 50)
-                    if (userRepos.isNotEmpty()) {
-                        _usersRepoStatus.postValue(Results.Success(userRepos))
+        if (totalRepo != userReposList?.size) {
+            networkUtil.isLastPage(false)
+            if (networkUtil.hasInternetConnection()) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    try {
+                        if (userReposList == null) _usersRepoStatus.postValue(Results.Loading)
+                        val userRepos = userRepository.getUserRepo(name, repoPages)
+                        if (userRepos.isNotEmpty()) {
+                            if (userReposList == null) {
+                                userReposList = userRepos
+                            } else {
+                                userReposList?.addAll(userRepos)
+                            }
+                            _usersRepoStatus.postValue(Results.Success(userReposList))
+                            repoPages++
+                        }else{
+                            _usersRepoStatus.postValue(Results.Success(emptyList()))
+                        }
+                    } catch (t: Throwable) {
+                        Log.e("DetailsViewModel", "${t.message}")
+                        _usersRepoStatus.postValue(Results.Error(t.message))
                     }
-                } catch (t: Throwable) {
-                    Log.e("DetailsViewModel", "${t.message}")
-                    _usersRepoStatus.postValue(Results.Error(t.message))
+                }
+            } else {
+                if (userReposList == null) {
+                    _usersRepoStatus.postValue(Results.NoInternet)
+
+                } else {
+                    _usersRepoStatus.postValue(Results.Success(userReposList))
                 }
             }
         } else {
-            _usersRepoStatus.postValue(Results.NoInternet)
+            networkUtil.isLastPage(true)
+            Log.e("DetailsViewModel", "these is the last page")
         }
     }
 
@@ -179,7 +203,7 @@ class DetailsViewModel(
         }
     }
 
-     fun getUserName(name: String) = userRepository.getUserName(name)
+    fun getUserName(name: String) = userRepository.getUserName(name)
 
     fun addUserToBookMark(user: UserResponse) {
         viewModelScope.launch(Dispatchers.IO) {
