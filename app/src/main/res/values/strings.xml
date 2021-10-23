@@ -21,4 +21,7 @@
     <string name="github_wep">Github Wep</string>
     <string name="user_details">User Details</string>
     <string name="bookmarks">BookMarks</string>
+    <string name="title">Title:</string>
+    <string name="number">Number:</string>
+    <string name="state">State:</string>
 </resources>
