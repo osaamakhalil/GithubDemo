@@ -29,22 +29,29 @@ I create this repo for a few reasons:
 - Latest Android SDK Tools and build tools.
 
 # App Feature
-- Explore all github features from Home View
+- Explore all github features from Home View.
 - Explore and search github users with infinite scrolling.
 - Explore user Profile and Repositories by touch the cells.
 - Explore user Followers/Following list.
 - Explore user Details
 - Save any User to The Bookmarks screen by Tap on the Bookmark Button.
 - You can delete or Excute Bookmarks.
-- Swipe to Delete search Records
-- Swipe TO refresh  
-- paging/errors handleing 
+- Swipe to Delete bookmarks records.
+- Swipe to refresh.  
+- paging/errors handleing. 
 - Explore and search for Public Repositories.
-- Explore trending repos form Explore View ( beta )
+- Explore trending repos form Explore View.
+- Explore trending issues form Explore View.
 
 
 # Some App Views Screenshots
-on progress...
+![11](https://user-images.githubusercontent.com/59806410/138580948-4edfd34c-8088-4713-9c56-901cd6370442.JPEG)
+![22](https://user-images.githubusercontent.com/59806410/138580959-9154f662-4145-4f57-9ec4-8a4ec9c6eff0.JPEG)
+![33](https://user-images.githubusercontent.com/59806410/138580993-6d4a22f3-0ac2-44f6-a9bb-fb972127bf55.JPEG)
+
+# MVVM Architecture 
+![final-architecture](https://user-images.githubusercontent.com/59806410/138581065-768be895-2348-475e-9abe-54a75ec4cf23.png)
+
 
 # TODO
 - Implement dagger
