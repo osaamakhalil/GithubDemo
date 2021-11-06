@@ -58,7 +58,7 @@ class UserRepoAdapter(
     }
 
     private fun isLoading(position: Int): Boolean {
-        return position == itemCount - 1 && !networkUtil.lastPage && itemCount >= 9
+        return position == itemCount - 1 && !networkUtil.lastPage && itemCount >= 6
     }
 
     private fun populateItemRows(viewHolder: RepoViewHolder, position: Int) {
