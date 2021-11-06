@@ -1,13 +1,14 @@
 package com.example.githubdemo.repository
 
 import androidx.lifecycle.LiveData
+import com.example.githubdemo.api.RetrofitBuilder
 import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.users.model.*
 
 
-class UserRepositoryImpl(db: UsersDatabase) : UserRepository {
+class UserRepositoryImpl(db: UsersDatabase, retrofitBuilder: RetrofitBuilder) : UserRepository {
 
-    private val userRemoteDataSource: UserRemoteDataSource = UserRemoteDataSource()
+    private val userRemoteDataSource: UserRemoteDataSource = UserRemoteDataSource(retrofitBuilder)
     private val userLocalDataSource: UserLocalDataSource = UserLocalDataSource(db)
 
     override suspend fun getUsers(page: Int): List<UserResponse> {

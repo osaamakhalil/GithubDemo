@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.ListUserAdapter
+import com.example.githubdemo.api.RetrofitBuilder
 import com.example.githubdemo.bookmark.BookMarkViewModel
 import com.example.githubdemo.bookmark.BookMarkViewModelFactory
 import com.example.githubdemo.databinding.FragmentBookMarkBinding
@@ -31,7 +32,7 @@ class BookMarkFragment : Fragment() {
     }
     private val bookMarkViewModel: BookMarkViewModel by viewModels {
         val repository =
-            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application),RetrofitBuilder)
         BookMarkViewModelFactory(repository, networkUtil)
     }
 

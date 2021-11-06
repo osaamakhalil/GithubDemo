@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.DetailsPagerAdapter
+import com.example.githubdemo.api.RetrofitBuilder
 import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.FragmentUserDetailsBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
@@ -34,7 +35,8 @@ class UserDetailsFragment : Fragment() {
     }
     private val detailsViewModel: DetailsViewModel by viewModels {
         val repository =
-            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application),
+                RetrofitBuilder)
         DetailsViewModelProviderFactory(repository, networkUtil)
 
     }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.UserRepoAdapter
+import com.example.githubdemo.api.RetrofitBuilder
 import com.example.githubdemo.databinding.FragmentPublicRepoBinding
 import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.repository.UserRepositoryImpl
@@ -34,7 +35,8 @@ class PublicRepoFragment : Fragment() {
     }
     private val publicRepoViewModel: PublicRepoViewModel by viewModels {
         val repository =
-            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application),
+                RetrofitBuilder)
         PublicRepoViewModelProviderFactory(repository, networkUtil)
     }
     private var isScrolling = false

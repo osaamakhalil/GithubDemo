@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.UserRepoAdapter
+import com.example.githubdemo.api.RetrofitBuilder
 import com.example.githubdemo.databinding.FragmentStarredBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.db.UsersDatabase
@@ -29,7 +30,8 @@ class StarredFragment : Fragment() {
     }
     private val detailsViewModel: DetailsViewModel by viewModels {
         val repository =
-            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application),
+                RetrofitBuilder)
         DetailsViewModelProviderFactory(repository, networkUtil)
     }
 

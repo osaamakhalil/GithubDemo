@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.ListUserAdapter
+import com.example.githubdemo.api.RetrofitBuilder
 import com.example.githubdemo.databinding.FragmentFollowersBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
 import com.example.githubdemo.db.UsersDatabase
@@ -36,7 +37,8 @@ class FollowersFragment : Fragment() {
     }
     private val detailsViewModel: DetailsViewModel by viewModels {
         val repository =
-            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application),
+                RetrofitBuilder)
         DetailsViewModelProviderFactory(repository, networkUtil)
     }
     private val args: FollowersFragmentArgs by navArgs()
@@ -104,6 +106,7 @@ class FollowersFragment : Fragment() {
     private fun tryAgainButton() {
         binding.btFollowersTryAgain.setOnClickListener {
             detailsViewModel.getUserFollowers(userName)
+            detailsViewModel.getUserDetails(userName)
         }
     }
 

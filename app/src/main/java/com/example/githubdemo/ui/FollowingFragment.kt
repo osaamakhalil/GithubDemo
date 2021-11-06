@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.ListUserAdapter
+import com.example.githubdemo.api.RetrofitBuilder
 import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.FragmentFollowingBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
@@ -33,7 +34,8 @@ class FollowingFragment : Fragment() {
     }
     private val detailsViewModel: DetailsViewModel by viewModels {
         val repository =
-            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application),
+                RetrofitBuilder)
         DetailsViewModelProviderFactory(repository, networkUtil)
     }
     private lateinit var userFollowingAdapter: ListUserAdapter
@@ -134,8 +136,8 @@ class FollowingFragment : Fragment() {
     }
 
     /*
-* handle pagination
-*  */
+     * handle pagination
+     *  */
     private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
