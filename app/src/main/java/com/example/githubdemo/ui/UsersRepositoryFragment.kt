@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.UserRepoAdapter
+import com.example.githubdemo.api.RetrofitBuilder
 import com.example.githubdemo.utils.NetworkUtil
 import com.example.githubdemo.databinding.FragmentRepositoryBinding
 import com.example.githubdemo.repository.UserRepositoryImpl
@@ -26,7 +27,7 @@ class UsersRepositoryFragment() : Fragment() {
     private var _binding: FragmentRepositoryBinding? = null
     private val binding get() = _binding!!
     private lateinit var repoAdapter: UserRepoAdapter
-    val networkUtil: NetworkUtil by lazy {
+    private  val networkUtil: NetworkUtil by lazy {
         NetworkUtil(requireContext())
     }
     private lateinit var usersName: String
@@ -34,7 +35,7 @@ class UsersRepositoryFragment() : Fragment() {
 
     private val detailsViewModel: DetailsViewModel by viewModels {
         val repository =
-            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application),RetrofitBuilder)
         DetailsViewModelProviderFactory(repository, networkUtil)
     }
 

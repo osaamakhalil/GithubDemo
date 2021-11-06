@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubdemo.R
 import com.example.githubdemo.adapter.IssuesAdapter
+import com.example.githubdemo.api.RetrofitBuilder
 import com.example.githubdemo.databinding.FragmentPublicIssuesBinding
 import com.example.githubdemo.db.UsersDatabase
 import com.example.githubdemo.repository.UserRepositoryImpl
@@ -33,7 +34,8 @@ class PublicIssuesFragment : Fragment() {
     }
     val publicIssuesViewModel: PublicIssuesViewModel by viewModels {
         val repository =
-            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application),
+                RetrofitBuilder)
         PublicIssuesViewModelProviderFactory(networkUtil, repository)
     }
     private lateinit var issuesAdapter: IssuesAdapter

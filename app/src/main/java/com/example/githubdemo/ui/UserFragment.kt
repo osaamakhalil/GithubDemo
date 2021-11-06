@@ -1,7 +1,5 @@
 package com.example.githubdemo.ui
 
-import android.app.Activity
-import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.util.Log
@@ -33,6 +31,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import android.view.inputmethod.InputMethodManager
+import com.example.githubdemo.api.RetrofitBuilder
 
 
 class UserFragment : Fragment() {
@@ -40,16 +39,17 @@ class UserFragment : Fragment() {
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
     private lateinit var listUserAdapter: ListUserAdapter
-    val networkUtil: NetworkUtil by lazy {
+    private val networkUtil: NetworkUtil by lazy {
         NetworkUtil(requireContext())
     }
-    var searchText = ""
-    var isSearchList = false
+    private var searchText = ""
+    private var isSearchList = false
     private lateinit var cashUsersList: List<UserResponse>
 
     private val userViewModel: UserViewModel by viewModels {
         val repository =
-            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application))
+            UserRepositoryImpl(UsersDatabase.getInstance(requireActivity().application),
+                RetrofitBuilder)
         UserViewModelProviderFactory(repository, networkUtil)
     }
     private var isScrolling = false
